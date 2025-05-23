@@ -1,52 +1,86 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+    @section('title', 'Registrati - PIMEL')
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
-        </div>
+    <div class="card shadow-sm">
+        {{-- RIMOSSO IL card-header con i nav-pills --}}
+        <div class="card-body p-4 p-md-5">
+            <div class="text-center mb-4"> {{-- Spostato il logo qui --}}
+                <a href="{{ route('home') }}">
+                    <img src="{{ asset('assets/img/pimel_logo_dark_mode.svg') }}"
+                        alt="{{ config('app.name', 'PIMEL') }} Logo" height="50">
+                </a>
+            </div>
+            <h1 class="h4 card-title text-center mb-4">Crea il Tuo Account PIMEL</h1>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+            @if ($errors->any() && !$errors->has('name') && !$errors->has('email') && !$errors->has('password'))
+                <div class="alert alert-danger mb-3 small py-2">
+                    <ul class="list-unstyled mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+            <form method="POST" action="{{ route('register') }}" novalidate>
+                @csrf
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
+                <!-- Name -->
+                <div class="mb-3">
+                    <label for="name" class="form-label">{{ __('Nome Completo') }}</label>
+                    <input id="name" class="form-control @error('name') is-invalid @enderror" type="text"
+                        name="name" value="{{ old('name') }}" required autofocus autocomplete="name">
+                    @error('name')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+                <!-- Email Address -->
+                <div class="mb-3">
+                    <label for="email" class="form-label">{{ __('Indirizzo Email') }}</label>
+                    <input id="email" class="form-control @error('email') is-invalid @enderror" type="email"
+                        name="email" value="{{ old('email') }}" required autocomplete="username">
+                    @error('email')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+                <!-- Password -->
+                <div class="mb-3">
+                    <label for="password" class="form-label">{{ __('Password') }}</label>
+                    <input id="password" class="form-control @error('password') is-invalid @enderror" type="password"
+                        name="password" required autocomplete="new-password"
+                        aria-describedby="passwordHelpBlockRegister">
+                    <div id="passwordHelpBlockRegister" class="form-text small">
+                        La password deve contenere almeno 8 caratteri.
+                    </div>
+                    @error('password')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
 
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
+                <!-- Confirm Password -->
+                <div class="mb-3">
+                    <label for="password_confirmation" class="form-label">{{ __('Conferma Password') }}</label>
+                    <input id="password_confirmation"
+                        class="form-control @error('password_confirmation') is-invalid @enderror" type="password"
+                        name="password_confirmation" required autocomplete="new-password">
+                    @error('password_confirmation')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
 
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        {{ __('Registrati') }}
+                    </button>
+                </div>
+            </form>
+            {{-- Spostato il link "Hai già un account?" qui --}}
+            <div class="text-center mt-4">
+                <p class="mb-0 small">Hai già un account? <a href="{{ route('login') }}">Accedi qui</a></p>
+            </div>
+        </div> {{-- Fine card-body --}}
+        {{-- RIMOSSO il card-footer che conteneva il link a Login --}}
+    </div> {{-- Fine card --}}
 </x-guest-layout>
