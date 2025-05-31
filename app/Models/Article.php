@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 // Per lo slug e l'excerpt automatico
+
 
 class Article extends Model {
     use HasFactory; // Assicura che il trait HasFactory sia presente
@@ -117,7 +119,7 @@ class Article extends Model {
         }
 
         // Puoi restituire un'immagine placeholder di default se nessuna immagine è impostata
-        return asset( 'assets/img/placeholder_articolo.png' );
+        return null;
         // Assicurati che questo placeholder esista
     }
 
@@ -139,4 +141,22 @@ class Article extends Model {
             ->whereNotNull( 'published_at' )
             ->where( 'published_at', '<=', now() );
     }
+
+    /**
+     * Verifica se l'utente autenticato corrente ha messo "Mi Piace" a questo articolo.
+     *
+     * @return bool
+     */
+    public function getLikedByCurrentUserAttribute(): bool
+    {
+        if (!Auth::check()) {
+            return false; // Nessun utente loggato, quindi non può aver messo "Mi Piace"
+        }
+
+        // La relazione 'likes' è definita come hasMany(ArticleLike::class)
+        // Vogliamo verificare se esiste un record in ArticleLike per questo utente e questo articolo.
+        return $this->likes()->where('user_id', Auth::id())->exists();
+    }
+
+
 }

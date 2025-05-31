@@ -11,8 +11,16 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+         // Aggiungi il tuo alias qui:
+        $middleware->alias([
+            'admin' => \App\Http\Middleware\AdminMiddleware::class, // Il tuo middleware esistente
+            'redirect.admin' => \App\Http\Middleware\RedirectAdminFromUserDashboard::class, // Il tuo nuovo middleware
+            // Mantieni gli altri alias che potrebbero essere già presenti
+        ]);
         //
     })
+
+    
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

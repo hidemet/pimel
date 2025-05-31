@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo; 
 use Illuminate\Support\Str;
 // Per lo slug
 
@@ -18,6 +19,8 @@ class Service extends Model {
         'objectives',
         'modalities',
         'is_active',
+        'target_category_id', // Aggiunto
+
     ];
 
     /**
@@ -41,6 +44,11 @@ class Service extends Model {
     // fosse una FK, ma l'abbiamo definita come stringa per flessibilità.
 
     // MUTATORS & ACCESSORS (Opzionale, per lo slug)
+
+     public function targetCategory(): BelongsTo
+    {
+        return $this->belongsTo(TargetCategory::class);
+    }
 
     /**
      * Imposta lo slug automaticamente quando si imposta il nome.

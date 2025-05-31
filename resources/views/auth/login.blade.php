@@ -12,6 +12,30 @@
             </div>
             <h1 class="h4 card-title text-center mb-4">Accedi al tuo Account</h1>
 
+            {{-- INIZIO MESSAGGIO CONDIZIONALE --}}
+            @if (request()->has('redirect_reason'))
+                @php
+                    $message = '';
+                    switch (request('redirect_reason')) {
+                        case 'like_article':
+                            $message =
+                                'Per esprimere il tuo "Mi Piace" agli articoli, devi prima accedere o registrarti.';
+                            break;
+                        case 'comment_article': // Potresti aggiungerlo per i commenti in futuro
+                            $message = 'Per lasciare un commento, devi prima accedere o registrarti.';
+                            break;
+                        // Aggiungi altri casi se necessario
+                    }
+                @endphp
+                @if ($message)
+                    <div class="alert alert-info small py-2 mb-3" role="alert">
+                        <i class="bi bi-info-circle-fill me-2"></i>
+                        {{ $message }}
+                    </div>
+                @endif
+            @endif
+            {{-- FINE MESSAGGIO CONDIZIONALE --}}
+
             <!-- Session Status -->
             @if (session('status'))
                 <div class="alert alert-success mb-3 small py-2" role="alert">

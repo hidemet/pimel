@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Service;
+use App\Models\TargetCategory; // Importa il modello TargetCategory
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -9,54 +11,33 @@ class ServiceController extends Controller
 {
     public function index(): View
     {
-        $services = Service::where('is_active', true)->orderBy('name')->get();
+        // Recupera tutte le categorie di target che hanno almeno un servizio attivo associato,
+        // oppure tutte le categorie se vuoi mostrarle anche se vuote.
+        // Ordiniamo per nome o per un campo 'order' se lo aggiungessi in futuro.
+        $targetCategories = TargetCategory::with([
+            'services' => function ($query) {
+                $query->where('is_active', true)->orderBy('name'); // Carica solo servizi attivi, ordinati per nome
+            }
+        ])
+        ->orderBy('name') // Ordina le categorie per nome (es. Altri Servizi, Genitori, Professionisti...)
+        ->get();
 
-        $allActiveServices = Service::where('is_active', true)->get();
+        // Opzionale: Se vuoi una categoria "Servizi non categorizzati" per i servizi con target_category_id = null
+        $uncategorizedServices = Service::where('is_active', true)
+                                        ->whereNull('target_category_id')
+                                        ->orderBy('name')
+                                        ->get();
 
-
-        $servicesByTarget = [
-            'genitori' => $services->filter(function ($service) {
-                // Adapta questa logica al tuo campo effettivo
-                // Esempio: se hai un campo 'target_audience_slug' o 'category'
-                // return $service->target_audience_slug === 'genitori';
-                // O se il nome contiene certe parole chiave (meno robusto)
-                return stripos($service->name, 'Genitor') !== false || stripos($service->target_audience, 'Genitor') !== false;
-            }),
-            'professionisti' => $services->filter(function ($service) {
-                // return $service->target_audience_slug === 'professionisti';
-                return stripos($service->name, 'Educator') !== false ||
-                       stripos($service->name, 'Insegnant') !== false ||
-                       stripos($service->name, 'Supervisione') !== false && stripos($service->name, 'Scolastico') === false || // Evita Supervisione Scolastica qui
-                       stripos($service->target_audience, 'Educator') !== false ||
-                       stripos($service->target_audience, 'Insegnant') !== false;
-            }),
-            'scuole' => $services->filter(function ($service) {
-                // return $service->target_audience_slug === 'scuole';
-                return stripos($service->name, 'Scolastic') !== false ||
-                       stripos($service->target_audience, 'Scuol') !== false ||
-                       stripos($service->name, 'Studenti') !== false && stripos($service->name, 'Universitari') === false; // Supporto allo studio per scuole
-            }),
-        ];
-
-        // Per gestire servizi che potrebbero non rientrare nettamente o per evitare duplicati
-        // Questa è una logica di esempio, potresti aver bisogno di un sistema più robusto
-        $assignedServiceIds = collect($servicesByTarget)->flatMap(function ($group) {
-            return $group->pluck('id');
-        })->unique();
-
-        $servicesByTarget['altri'] = $services->reject(function ($service) use ($assignedServiceIds) {
-            return $assignedServiceIds->contains($service->id);
-        });
-
-        // Rimuovi la categoria 'altri' se è vuota
-        if ($servicesByTarget['altri']->isEmpty()) {
-            unset($servicesByTarget['altri']);
-        }
+        // Recupera tutti i servizi attivi per passarli alla modal (se necessario per la logica precedente)
+        // Questa parte potrebbe non essere più necessaria se la modal carica i dati dinamicamente
+        // o se i dati sono già inclusi in $targetCategories.
+        $allActiveServices = Service::where('is_active', true)->orderBy('name')->get();
 
 
         return view('servizi.index', [
-        'servicesByTarget' => $servicesByTarget,
-        'allActiveServices' => $allActiveServices // Aggiungi questo
-    ]);
+            'targetCategories' => $targetCategories,
+            'uncategorizedServices' => $uncategorizedServices, // Passa i servizi non categorizzati
+            'allActiveServices' => $allActiveServices // Mantenuto per ora, valuta se serve ancora
+        ]);
     }
 }
