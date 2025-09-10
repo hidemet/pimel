@@ -5,18 +5,12 @@ namespace Database\Seeders;
 use App\Models\ContactMessage;
 use Illuminate\Database\Seeder;
 
-class ContactMessageSeeder extends Seeder {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void {
-        // ContactMessage::truncate(); // Opzionale
+class ContactMessageSeeder extends Seeder
+{
+    public function run(): void
+    {
+        ContactMessage::factory(50)->create();
 
-        $numberOfMessages = 50; // Quanti messaggi di contatto vuoi creare
-
-        ContactMessage::factory()->count( $numberOfMessages )->create();
-
-        $this->command
-            ->info( "Creati {$numberOfMessages} messaggi di contatto fittizi." );
+        $this->command->info('Messaggi di contatto creati con successo.');
     }
 }

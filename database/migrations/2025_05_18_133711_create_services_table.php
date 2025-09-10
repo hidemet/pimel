@@ -8,24 +8,27 @@ return new class extends Migration {
     /**
      * Run the migrations.
      */
-    public function up(): void {
-        Schema::create( 'services', function ( Blueprint $table ) {
+    public function up(): void
+    {
+        Schema::create('services', function (Blueprint $table) {
             $table->id();
-            $table->string( 'name' )->unique();
-            $table->string( 'slug' )->unique();
-            $table->text( 'description' )->nullable();
-            $table->text( 'target_audience' )->nullable();
-            $table->text( 'objectives' )->nullable();
-            $table->text( 'modalities' )->nullable();
-            $table->boolean( 'is_active' )->default( true );
+            $table->string('name')->unique();
+            $table->string('slug')->unique();
+            $table->text('description')->nullable();
+            $table->text('target_audience')->nullable();
+            $table->text('objectives')->nullable();
+            $table->text('modalities')->nullable();
+            $table->unsignedBigInteger('target_category_id')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
-        } );
+        });
     }
 
     /**
      * Reverse the migrations.
      */
-    public function down(): void {
-        Schema::dropIfExists( 'services' );
+    public function down(): void
+    {
+        Schema::dropIfExists('services');
     }
 };

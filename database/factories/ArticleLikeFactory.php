@@ -3,60 +3,35 @@
 namespace Database\Factories;
 
 use App\Models\Article;
-use App\Models\ArticleLike;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ArticleLikeFactory extends Factory {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
-    protected $model = ArticleLike::class;
-
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array {
-        $article = Article::inRandomOrder()->where( 'status', 'published' )
-            ->first() ?? Article::factory()->published()->create();
-        $user = User::inRandomOrder()->first() ?? User::factory()->create();
-
+class ArticleLikeFactory extends Factory
+{
+    public function definition(): array
+    {
         return [
-            'article_id' => $article->id,
-            'user_id'    => $user->id,
-
-            // Timestamps (created_at, updated_at) verranno gestiti automaticamente da Eloquent
-
-            // e possono essere personalizzati nel seeder se necessario, ad esempio
-            // per farli apparire dopo la pubblicazione dell'articolo.
-            'created_at' => fake()->dateTimeBetween( $article->published_at ??
-                $article->created_at, 'now' ),
+            'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
         ];
     }
 
-    /**
-     * Assign a specific article to the like.
-     */
-    public function forArticle( Article $article ): static
+    public function forArticle($articleId): static
     {
-        return $this->state( fn( array $attributes ) => [
-            'article_id' => $article->id,
-            'created_at' => fake()->dateTimeBetween( $article->published_at ??
-                $article->created_at, 'now' ), // Aggiorna created_at
-        ] );
+        return $this->state(['article_id' => $articleId]);
     }
 
-    /**
-     * Assign a specific user to the like.
-     */
-    public function byUser( User $user ): static
+    public function byUser($userId): static
     {
-        return $this->state( fn( array $attributes ) => [
-            'user_id' => $user->id,
-        ] );
+        return $this->state(['user_id' => $userId]);
+    }
+
+    public function recent(): static
+    {
+        return $this->state(['created_at' => fake()->dateTimeBetween('-1 month', 'now')]);
+    }
+
+    public function onDate($date): static
+    {
+        return $this->state(['created_at' => $date]);
     }
 }

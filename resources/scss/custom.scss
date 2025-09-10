@@ -15,14 +15,17 @@
 // -----------------------------------------------------------------------------
 
 // **NUOVE VARIABILI PER GLI SFONDI SPECIFICI**
-$bg-form-color: #d3e4ff;
-$bg-body-public-default: #f8f9ff; // Sfondo per pagine pubbliche
-$bg-body-blog-index: #e6ebf0; // Sfondo per la pagina /blog
-$bg-body-private-default: #f7fafc; // Sfondo per pagine utenti loggati (dashboard, profilo)
+// $bg-form-color: #d3e4ff;
+// $bg-body-public-default: #f8f9ff; // Sfondo per pagine pubbliche
+// $bg-body-blog-index: #e6ebf0; // Sfondo per la pagina /blog
+// $bg-body-private-default: #f8fafc; // Sfondo per pagine utenti loggati (dashboard, profilo)
 
 // Custom Theme Colors
-$custom-primary: #0076cf;
-$custom-secondary: #8198d4;
+//$custom-primary: #0076cf;
+//$custom-primary: #005ccc;
+$custom-primary: #3960cc;
+$custom-secondary: #47444e;
+//$custom-secondary: #a5a5a5;
 $custom-tertiary: #203672;
 $custom-warning: #f8cc47;
 $custom-ctc: #ffce12;
@@ -37,7 +40,8 @@ $custom-navbar-color: #203672; // Used for links, toggler icon based on this
 
 // Global Theming Variables
 $global-text-color: #000000;
-$default-body-bg: #f8f9ff;
+$body-bg: #f8f9ff;
+$body-color: $global-text-color;
 $footer-custom-bg-color: #203672;
 
 // Specific Page/Component Backgrounds
@@ -49,6 +53,7 @@ $newsletter-bg-color: #f8eedb;
 $consulenza-bg-color: #e4eaf1;
 $article-list-bg: #f8f9ff; // Was defined, check usage
 $header-bg-home: #d3e4ff; // For home page header
+$hero-section-bg: #00529d;
 
 // Font Stacks
 $font-family-sans-serif-custom:
@@ -91,7 +96,6 @@ $warning: $custom-warning;
 // Body
 // Sovrascrivi il $body-bg di default con il tuo colore per le pagine pubbliche.
 // Le classi specifiche per pagina sovrascriveranno questo se necessario.
-$body-bg: $bg-body-public-default;
 $body-color: $global-text-color;
 
 // Typography
@@ -131,7 +135,13 @@ $theme-colors: map-merge(
         // Add your custom tertiary
         "ctc": $custom-ctc,
         // Add your custom ctc color
-        // "primary": $primary, // Already updated by $primary = $custom-primary above
+        "primary": $custom-primary,
+        // Already updated by $primary = $custom-primary above
+        "secondary": $custom-secondary,
+        // Already updated by $secondary = $custom-secondary above
+        "warning": $custom-warning,
+
+        // Already updated by $warning = $custom-warning above
         // "secondary": $secondary, // Already updated
          // "warning": $warning // Already updated
     )
@@ -148,6 +158,15 @@ $theme-colors: map-merge(
 // -----------------------------------------------------------------------------
 // 6. YOUR CUSTOM STYLES (APPLIED AFTER BOOTSTRAP)
 // -----------------------------------------------------------------------------
+
+.bg-herosection {
+    background-color: $hero-section-bg;
+}
+
+.is-invalid-border {
+    border-color: var(--bs-danger) !important; // Rende il bordo rosso
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-danger-rgb), 0.25) !important; // Aggiunge un'ombra rossa
+}
 
 .nav-pills-segmented {
     display: inline-flex; // Modificato per non occupare tutta la larghezza di default
@@ -218,15 +237,15 @@ $theme-colors: map-merge(
 // Queste classi verranno applicate all'elemento <body> o agli header/navbar.
 // L'uso di `!important` è per assicurarsi che sovrascrivano le utility di Bootstrap se applicate
 // allo stesso elemento, ma idealmente la struttura delle props dei componenti lo gestirà.
-.bg-body-public-default {
-    background-color: $bg-body-public-default !important;
-}
-.bg-body-blog-index {
-    background-color: $bg-body-blog-index !important;
-}
-.bg-body-private-default {
-    background-color: $bg-body-private-default !important;
-}
+// .bg-body-public-default {
+//     background-color: $bg-body-public-default !important;
+// }
+// .bg-body-blog-index {
+//     background-color: $bg-body-blog-index !important;
+// }
+// .bg-body-private-default {
+//     background-color: $bg-body-private-default !important;
+// }
 
 // Classi per Navbar/Page-Header quando devono ereditare il colore del body
 // (o essere un colore specifico come 'bg-white')
@@ -247,7 +266,7 @@ $theme-colors: map-merge(
 // }
 
 .signature-img {
-    max-width: 250px; // GIÀ PRESENTE!
+    max-width: 250px; 
     height: auto;
     margin-top: 1rem;
 }
@@ -366,21 +385,21 @@ $theme-colors: map-merge(
 // .bg-default is already handled by $body-bg potentially
 
 // Article card related styles (excerpt, title clamping)
-.excerpt-clamp-custom {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    -webkit-line-clamp: 3;
-    line-height: 1.5;
-}
-.article-title-clamp a {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    -webkit-line-clamp: 2;
-}
+// .excerpt-clamp-custom {
+//     display: -webkit-box;
+//     -webkit-box-orient: vertical;
+//     overflow: hidden;
+//     text-overflow: ellipsis;
+//     -webkit-line-clamp: 3;
+//     line-height: 1.5;
+// }
+// .article-title-clamp a {
+//     display: -webkit-box;
+//     -webkit-box-orient: vertical;
+//     overflow: hidden;
+//     text-overflow: ellipsis;
+//     -webkit-line-clamp: 2;
+// }
 
 // ... other specific styles from your original file like .blog-post-item, .article-page-container etc.
 // Ensure they are still relevant and correctly structured.

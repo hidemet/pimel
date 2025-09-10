@@ -1,329 +1,387 @@
-{{-- resources/views/admin/articles/index.blade.php --}}
-<x-app-layout :bodyClass="'bg-body-private-default'" :useAdminNavigation="true">
-    @section('title', 'Gestione Articoli - Admin PIMEL')
+@push('page-scripts')
+  @vite('resources/js/pages/admin-articles-index.js')
+@endpush
 
-    <x-slot name="pageHeader">
-        <x-layout.page-header title="Gestione Articoli">
-            <a href="{{ route('admin.articles.create') }}" class="btn btn-primary">
-                <span class="material-symbols-outlined fs-6 me-1 align-middle">add_circle</span>
-                Nuovo Articolo
-            </a>
-        </x-layout.page-header>
-    </x-slot>
+<x-app-layout>
+  @section('title', 'Gestione Articoli - Admin PIMEL')
 
-    <div class="container py-4">
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
+  @isset($breadcrumbs)
+    <div class="container pt-3">
+      <x-admin.breadcrumb :items="$breadcrumbs" />
+    </div>
+  @endisset
 
-        {{-- Riga 1: Segmented Buttons per Stato --}}
-        <div class="nav nav-pills-segmented mb-3">
-            @foreach ($articleDisplayStatuses as $statusKey => $statusData)
-                <a href="{{ route('admin.articles.index', array_merge(request()->except(['status', 'page']), ['status' => $statusKey])) }}"
-                    class="nav-link {{ $currentStatusFilter == $statusKey ? 'active' : '' }} d-flex align-items-center gap-1 flex-wrap justify-content-center px-2 py-1">
-                    <span class="material-symbols-outlined fs-6">{{ $statusData['icon'] }}</span>
-                    <span class="small">{{ $statusData['text'] }}</span>
-                    <span
-                        class="badge rounded-pill {{ $currentStatusFilter == $statusKey ? 'bg-white text-primary' : 'bg-secondary bg-opacity-25' }} ms-1">
-                        {{ $statusData['count'] }}
-                    </span>
-                </a>
-            @endforeach
-        </div>
+  <x-slot name="pageHeader">
+    <x-layout.page-header title="Gestione Articoli">
+      <a
+        href="{{ route('admin.articles.create') }}"
+        class="btn btn-primary"
+      >
+        <span class="material-symbols-outlined fs-6 me-1 align-middle">
+          add_circle
+        </span>
+        Nuovo Articolo
+      </a>
+    </x-layout.page-header>
+  </x-slot>
 
-        {{-- Riga 2: Ricerca, Filtri Dropdown, Ordinamento Dropdown --}}
-        <div class="mb-4">
-            <form id="mainFilterSortForm" action="{{ route('admin.articles.index') }}" method="GET"
-                class="row g-2 align-items-center">
-                {{-- Input nascosti per mantenere lo stato e l'ordinamento quando si invia solo la ricerca testuale --}}
-                <input type="hidden" name="status" value="{{ $currentStatusFilter }}">
-                <input type="hidden" name="rubric_id" value="{{ request('rubric_id', 'all') }}">
-                <input type="hidden" name="author_id" value="{{ request('author_id', 'all') }}">
-                <input type="hidden" name="date_from" value="{{ request('date_from') }}">
-                <input type="hidden" name="date_to" value="{{ request('date_to') }}">
-                <input type="hidden" name="sort_by" value="{{ request('sort_by', 'published_at') }}">
-                <input type="hidden" name="sort_direction" value="{{ request('sort_direction', 'desc') }}">
+  <div class="container py-4 admin-articles-page">
+    @if (session('success'))
+      <div
+        class="alert alert-success alert-dismissible fade show"
+        role="alert"
+      >
+        <i class="bi bi-check-circle-fill me-2"></i>
+        {{ session('success') }}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+    @endif
 
-                {{-- Colonna Ricerca Testuale --}}
-                <div class="col-md-5 col-lg-6">
-                    <label for="search_term_main" class="visually-hidden">Cerca Articoli</label>
-                    <div class="input-group input-group-sm">
-                        <span class="input-group-text"><span class="material-symbols-outlined fs-6">search</span></span>
-                        <input type="text" name="search" id="search_term_main" class="form-control"
-                            placeholder="Cerca titolo, autore..." value="{{ request('search') }}">
-                    </div>
-                </div>
-
-                {{-- Colonna Filtri e Ordinamento --}}
-                <div class="col-md-7 col-lg-6 d-flex justify-content-md-end align-items-center gap-2">
-                    {{-- Pulsante Filtri Dropdown --}}
-                    <div class="dropdown">
-                        <button class="btn btn-sm btn-outline-secondary d-flex align-items-center" type="button"
-                            id="filterDropdownButton" data-bs-toggle="dropdown" aria-expanded="false"
-                            data-bs-auto-close="outside">
-                            <span class="material-symbols-outlined fs-6 me-1">filter_alt</span>
-                            Filtri
-                            @if ($activeFilterCount > 0)
-                                <span class="badge rounded-pill bg-primary ms-2">{{ $activeFilterCount }}</span>
-                            @endif
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0"
-                            aria-labelledby="filterDropdownButton" style="min-width: 320px;">
-                            <h6 class="dropdown-header px-0 mb-2">Filtri Avanzati</h6>
-                            {{-- Form interno al dropdown per applicare filtri specifici --}}
-                            <form id="advancedFilterDropdownForm" action="{{ route('admin.articles.index') }}"
-                                method="GET">
-                                {{-- Mantiene lo stato corrente e l'ordinamento --}}
-                                <input type="hidden" name="status" value="{{ $currentStatusFilter }}">
-                                <input type="hidden" name="sort_by" value="{{ request('sort_by', 'published_at') }}">
-                                <input type="hidden" name="sort_direction"
-                                    value="{{ request('sort_direction', 'desc') }}">
-                                {{-- Mantiene la ricerca testuale principale se presente --}}
-                                <input type="hidden" name="search" value="{{ request('search') }}">
-
-
-                                <div class="mb-3">
-                                    <label for="dd_date_from" class="form-label form-label-sm">Data Pubblicazione
-                                        Da</label>
-                                    <input type="date" name="date_from" id="dd_date_from"
-                                        class="form-control form-control-sm" value="{{ request('date_from') }}">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="dd_date_to" class="form-label form-label-sm">Data Pubblicazione
-                                        A</label>
-                                    <input type="date" name="date_to" id="dd_date_to"
-                                        class="form-control form-control-sm" value="{{ request('date_to') }}">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="dd_rubric_id" class="form-label form-label-sm">Rubrica</label>
-                                    <select name="rubric_id" id="dd_rubric_id" class="form-select form-select-sm">
-                                        <option value="all">Tutte le Rubriche</option>
-                                        @foreach ($allRubrics as $rubric)
-                                            <option value="{{ $rubric->id }}"
-                                                {{ request('rubric_id') == $rubric->id ? 'selected' : '' }}>
-                                                {{ $rubric->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="dd_author_id" class="form-label form-label-sm">Autore</label>
-                                    <select name="author_id" id="dd_author_id" class="form-select form-select-sm">
-                                        <option value="all">Tutti gli Autori</option>
-                                        @foreach ($allAuthors as $author)
-                                            <option value="{{ $author->id }}"
-                                                {{ request('author_id') == $author->id ? 'selected' : '' }}>
-                                                {{ $author->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="d-flex justify-content-between">
-                                    <a href="{{ route('admin.articles.index', ['status' => $currentStatusFilter, 'sort_by' => request('sort_by', 'published_at'), 'sort_direction' => request('sort_direction', 'desc'), 'search' => request('search')]) }}"
-                                        class="btn btn-sm btn-outline-secondary">Cancella Filtri</a>
-                                    <button type="submit" class="btn btn-sm btn-primary">Applica</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    {{-- Pulsante Ordinamento Dropdown --}}
-                    <div class="dropdown">
-                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center"
-                            type="button" id="sortDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="material-symbols-outlined fs-6 me-1">sort</span>
-                            {{ $sortOptions[$currentSortKey] ?? 'Ordina per...' }}
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0"
-                            aria-labelledby="sortDropdownButton">
-                            @foreach ($sortOptions as $key => $label)
-                                @php
-                                    [$sortByOption, $sortDirOption] = explode('_', $key, 2);
-                                    if (str_ends_with($sortByOption, 'count')) {
-                                        // es. likes_count_desc
-                                        $sortByOption = $sortByOption; // Il nome del campo è già 'likes_count'
-                                        // $sortDirOption rimane 'desc' o 'asc'
-                                    } elseif (str_ends_with($key, '_desc') || str_ends_with($key, '_asc')) {
-                                        $sortDirOption = Str::afterLast($key, '_');
-                                        $sortByOption = Str::beforeLast($key, '_' . $sortDirOption);
-                                    } else {
-                                        // fallback o errore di logica se la chiave non è formattata come previsto
-                                        $sortDirOption = 'desc';
-                                    }
-                                @endphp
-                                <li>
-                                    <a class="dropdown-item {{ $currentSortKey == $key ? 'active' : '' }}"
-                                        href="{{ route('admin.articles.index', array_merge(request()->all(), ['sort_by' => $sortByOption, 'sort_direction' => $sortDirOption, 'page' => 1])) }}">
-                                        {{ $label }}
-                                    </a>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-                {{-- Pulsante di submit per la ricerca testuale (se si vuole premere invio) --}}
-                {{-- Può essere rimosso se si implementa la ricerca live --}}
-                <button type="submit" class="visually-hidden" aria-hidden="true">Invia Ricerca</button>
-            </form>
-        </div>
-
-
-        <div class="card shadow-sm">
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover mb-0 align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th scope="col" style="width: 35%;">Titolo</th>
-                                <th scope="col" style="width: 15%;">Autore</th> {{-- REINTRODOTTO Autore per il filtro --}}
-                                <th scope="col" style="width: 15%;">Rubriche</th>
-                                <th scope="col" class="text-center" style="width: 5%;"><span
-                                        class="material-symbols-outlined fs-6" title="Commenti">chat_bubble</span>
-                                </th>
-                                <th scope="col" class="text-center" style="width: 5%;"><span
-                                        class="material-symbols-outlined fs-6" title="Mi Piace">thumb_up</span></th>
-                                <th scope="col" style="width: 12%;">Stato</th>
-                                <th scope="col" style="width: 13%;">Pubblicato il</th>
-                                <th scope="col" class="text-end" style="width: 10%;">Azioni</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($articles as $article)
-                                <tr>
-                                    <td>
-                                        <a href="{{ route('admin.articles.edit', $article) }}"
-                                            class="fw-medium text-decoration-none"
-                                            title="Modifica: {{ $article->title }}">
-                                            {{ Str::limit($article->title, 60) }}
-                                        </a>
-                                        @if ($article->status === 'published' || $article->status === 'scheduled')
-                                            <a href="{{ route('blog.show', $article->slug) }}" target="_blank"
-                                                class="ms-1 text-muted" title="Visualizza articolo sul sito">
-                                                <span class="material-symbols-outlined fs-6"
-                                                    style="vertical-align: text-bottom;">open_in_new</span>
-                                            </a>
-                                        @endif
-                                    </td>
-                                    <td>{{ $article->author->name ?? 'N/A' }}</td> {{-- REINTRODOTTO Autore --}}
-                                    <td>
-                                        @foreach ($article->rubrics->take(2) as $rubric)
-                                            <span
-                                                class="badge bg-light border text-dark fw-normal me-1 mb-1">{{ $rubric->name }}</span>
-                                        @endforeach
-                                        @if ($article->rubrics->count() > 2)
-                                            <span
-                                                class="badge bg-light border text-dark fw-normal mb-1">+{{ $article->rubrics->count() - 2 }}</span>
-                                        @endif
-                                    </td>
-                                    <td class="text-center">{{ $article->comments_count ?? 0 }}</td>
-                                    <td class="text-center">{{ $article->likes_count ?? 0 }}</td>
-                                    <td>
-                                        @php
-                                            $statusKeyForDisplay = $article->status ?? 'default';
-                                            $statusConfig = $articleDisplayStatuses[$statusKeyForDisplay] ?? [
-                                                'class' => 'bg-secondary',
-                                                'text' => Str::ucfirst($statusKeyForDisplay),
-                                                'icon' => 'label_important',
-                                            ];
-                                            $badgeClass = $statusConfig['class'] ?? 'bg-secondary';
-                                            if (
-                                                $statusKeyForDisplay === 'draft' ||
-                                                $statusKeyForDisplay === 'scheduled'
-                                            ) {
-                                                // Esempio per rendere il testo scuro su sfondi chiari
-                                                $badgeClass .=
-                                                    strpos($badgeClass, 'text-dark') === false ? ' text-dark' : '';
-                                            }
-                                        @endphp
-                                        <span class="badge {{ $badgeClass }} d-inline-flex align-items-center">
-                                            <span
-                                                class="material-symbols-outlined fs-6 me-1">{{ $statusConfig['icon'] }}</span>
-                                            {{ $statusConfig['text'] }}
-                                        </span>
-                                    </td>
-                                    <td class="small text-muted">
-                                        {{ $article->published_at ? $article->published_at->isoFormat('D MMM \'YY, HH:mm') : ($article->status === 'scheduled' && $article->published_at ? $article->published_at->isoFormat('D MMM \'YY, HH:mm') . ' (P)' : 'Non definito') }}
-                                    </td>
-                                    <td class="text-end">
-                                        <a href="{{ route('admin.articles.edit', $article) }}"
-                                            class="btn btn-sm btn-outline-primary py-1 px-2 me-1" title="Modifica">
-                                            <span class="material-symbols-outlined fs-6 align-middle">edit</span>
-                                        </a>
-                                        <form action="{{ route('admin.articles.destroy', $article) }}" method="POST"
-                                            class="d-inline"
-                                            onsubmit="return confirm('Sei sicuro di voler eliminare questo articolo «{{ addslashes($article->title) }}»? L\'azione è irreversibile.');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-outline-danger py-1 px-2"
-                                                title="Elimina">
-                                                <span class="material-symbols-outlined fs-6 align-middle">delete</span>
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="8" class="text-center py-5"> {{-- Aggiornato colspan --}}
-                                        <span class="material-symbols-outlined fs-1 text-muted mb-2">search_off</span>
-                                        <p class="mb-0">Nessun articolo trovato corrispondente ai criteri di ricerca.
-                                        </p>
-                                        @if (request()->except('page', 'status', 'sort_by', 'sort_direction'))
-                                            <p class="mt-2"><a
-                                                    href="{{ route('admin.articles.index', ['status' => $currentStatusFilter, 'sort_by' => request('sort_by', 'published_at'), 'sort_direction' => request('sort_direction', 'desc')]) }}"
-                                                    class="btn btn-sm btn-outline-secondary">Rimuovi filtri
-                                                    avanzati</a></p>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            @if ($articles->hasPages())
-                <div class="card-footer bg-light border-top-0">
-                    {{ $articles->withQueryString()->links() }}
-                </div>
-            @endif
-        </div>
+    {{-- Riga 1: Segmented Buttons per Stato --}}
+    <div class="nav nav-pills-segmented mb-3">
+      @foreach ($articleDisplayStatuses as $statusKey => $statusData)
+        <a
+          href="{{ route('admin.articles.index', array_merge(request()->except(['status', 'page']), ['status' => $statusKey])) }}"
+          class="nav-link {{ $currentStatusFilter == $statusKey ? 'active' : '' }} d-flex align-items-center gap-1 flex-wrap justify-content-center px-2 py-1"
+        >
+          <span class="material-symbols-outlined fs-6">
+            {{ $statusData['icon'] }}
+          </span>
+          <span class="small">{{ $statusData['text'] }}</span>
+          <span
+            class="badge rounded-pill {{ $currentStatusFilter == $statusKey ? 'bg-white text-primary' : 'bg-secondary bg-opacity-25' }} ms-1"
+          >
+            {{ $statusData['count'] }}
+          </span>
+        </a>
+      @endforeach
     </div>
 
-    @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // Gestione invio form principale per ricerca testuale
-                const mainFilterSortForm = document.getElementById('mainFilterSortForm');
-                const searchInputMain = document.getElementById('search_term_main');
+    {{-- Riga 2: Form per Ricerca, Filtri e Ordinamento --}}
+    <div class="mb-4">
+      <form
+        id="mainFilterSortForm"
+        action="{{ route('admin.articles.index') }}"
+        method="GET"
+        class="row g-2 align-items-center"
+      >
+        {{-- Input nascosto per mantenere lo stato --}}
+        <input
+          type="hidden"
+          name="status"
+          value="{{ $currentStatusFilter }}"
+        />
 
-                if (searchInputMain && mainFilterSortForm) {
-                    searchInputMain.addEventListener('keypress', function(event) {
-                        if (event.key === 'Enter') {
-                            event
-                        .preventDefault(); // Previene l'invio standard del form più esterno se ce n'è uno
-                            // Trova tutti i campi del form dropdown e imposta i loro valori
-                            // nel form principale prima di inviarlo, o assicurati che il form principale
-                            // sia l'unico inviato.
-                            // Per semplicità, qui presumiamo che i campi nascosti siano già aggiornati
-                            // o che il submit del form più esterno sia sufficiente.
-                            mainFilterSortForm.submit();
-                        }
-                    });
-                }
+        {{-- Ricerca testuale --}}
+        <div class="col">
+          <label
+            for="search_term_main"
+            class="visually-hidden"
+          >
+            Cerca Articoli
+          </label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input
+              type="text"
+              name="search"
+              id="search_term_main"
+              class="form-control"
+              placeholder="Cerca per titolo o autore..."
+              value="{{ request('search') }}"
+            />
+          </div>
+        </div>
 
-                //  (Ricerca Live commentata, da implementare se desiderato con AJAX)
-                // let debounceTimeout;
-                // if(searchInputMain) {
-                //     searchInputMain.addEventListener('input', function () {
-                //         clearTimeout(debounceTimeout);
-                //         debounceTimeout = setTimeout(() => {
-                //             mainFilterSortForm.submit(); // Semplice ricaricamento pagina
-                //         }, 700);
-                //     });
-                // }
-            });
-        </script>
-    @endpush
+        {{-- Pulsanti di ordinamento per data --}}
+        <div class="col-auto">
+          <div
+            class="btn-group shadow-sm"
+            role="group"
+            aria-label="Ordina per data"
+          >
+            <a
+              href="{{ route('admin.articles.index', array_merge(request()->query(), ['sort_direction' => 'desc', 'page' => 1])) }}"
+              class="btn btn-outline-secondary {{ $currentSortDirection === 'desc' ? 'active' : '' }}"
+              data-bs-toggle="tooltip"
+              title="Dal più recente"
+            >
+              <i class="bi bi-sort-down"></i>
+            </a>
+            <a
+              href="{{ route('admin.articles.index', array_merge(request()->query(), ['sort_direction' => 'asc', 'page' => 1])) }}"
+              class="btn btn-outline-secondary {{ $currentSortDirection === 'asc' ? 'active' : '' }}"
+              data-bs-toggle="tooltip"
+              title="Dal meno recente"
+            >
+              <i class="bi bi-sort-up"></i>
+            </a>
+          </div>
+        </div>
+
+        {{-- Pulsante nascosto per submit --}}
+        <button
+          type="submit"
+          class="visually-hidden"
+          aria-hidden="true"
+        >
+          Cerca
+        </button>
+      </form>
+    </div>
+
+    {{-- Lista Articoli (contenuto della tabella rimane invariato) --}}
+    <div class="article-list-container">
+      @if ($articles->isNotEmpty())
+        <div class="list-group list-group-flush">
+          @foreach ($articles as $article)
+            <div
+              id="article-row-{{ $article->id }}"
+              class="list-group-item p-3 article-admin-item-clickable"
+              data-edit-url="{{ route('admin.articles.edit', $article) }}"
+              style="cursor: pointer"
+            >
+              <div class="row g-3 align-items-center">
+                <div class="col-auto">
+                  <a
+                    href="{{ route('admin.articles.edit', $article) }}"
+                    tabindex="-1"
+                    class="d-block"
+                    style="width: 75px; height: 75px"
+                  >
+                    @php
+                      $imageUrl = $article->image_url ?? asset('assets/img/placeholder_articolo.png');
+                    @endphp
+
+                    <img
+                      src="{{ $imageUrl }}"
+                      alt="Copertina: {{ Str::limit($article->title, 30) }}"
+                      class="img-thumbnail object-fit-cover w-100 h-100 rounded"
+                    />
+                  </a>
+                </div>
+
+                <div class="col d-flex flex-column justify-content-center">
+                  @if ($article->rubric)
+                    <div class="mb-1">
+                      <span
+                        class="badge bg-light text-dark border me-1 fw-normal small"
+                      >
+                        {{ $article->rubric->name }}
+                        {{-- MODIFICATO --}}
+                      </span>
+                    </div>
+                  @endif
+
+                  <h2 class="h6 fw-semibold mb-1 lh-sm">
+                    <a
+                      href="{{ route('admin.articles.edit', $article) }}"
+                      class="text-dark text-decoration-none"
+                    >
+                      {{ $article->title }}
+                    </a>
+                  </h2>
+                  <div class="small text-muted mb-2">
+                    @if ($article->status === 'published' && $article->published_at)
+                      Pubblicato:
+                      {{ $article->published_at->isoFormat('D MMM YYYY, HH:mm') }}
+                    @elseif ($article->status === 'scheduled' && $article->published_at)
+                      Pianificato:
+                      {{ $article->published_at->isoFormat('D MMM YYYY, HH:mm') }}
+                    @elseif ($article->status === 'draft')
+                      Bozza:
+                      {{ $article->created_at->isoFormat('D MMM YYYY, HH:mm') }}
+                    @elseif ($article->status === 'archived')
+                      Archiviato:
+                      {{ $article->updated_at->isoFormat('D MMM YYYY, HH:mm') }}
+                    @endif
+                    <span class="mx-1">•</span>
+                    {{ $article->author->name ?? 'N/A' }}
+                  </div>
+                  <div class="small text-muted d-flex align-items-center">
+                    <span
+                      class="material-symbols-outlined fs-6 me-1 align-middle"
+                      title="Mi Piace"
+                    >
+                      thumb_up
+                    </span>
+                    <span class="me-3">{{ $article->likes_count ?? 0 }}</span>
+                    <span
+                      class="material-symbols-outlined fs-6 me-1 align-middle"
+                      title="Commenti"
+                    >
+                      chat_bubble
+                    </span>
+                    <span class="align-middle">
+                      {{ $article->comments_count ?? 0 }}
+                    </span>
+                  </div>
+                </div>
+
+                <div
+                  class="col-auto d-flex flex-column justify-content-center align-items-end article-actions-column"
+                  style="gap: 0.5rem"
+                >
+                  @if ($article->status === 'published' || $article->status === 'scheduled')
+                    <a
+                      href="{{ route('blog.show', $article->slug) }}"
+                      target="_blank"
+                      class="btn btn-sm btn-outline-secondary py-1 px-2"
+                      title="Visualizza articolo"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                    >
+                      <span class="material-symbols-outlined fs-6 align-middle">
+                        visibility
+                      </span>
+                    </a>
+                  @else
+                    <button
+                      class="btn btn-sm btn-outline-secondary py-1 px-2 disabled"
+                      title="Non visualizzabile"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                    >
+                      <span class="material-symbols-outlined fs-6 align-middle">
+                        visibility_off
+                      </span>
+                    </button>
+                  @endif
+                  <div class="dropdown">
+                    <button
+                      class="btn btn-sm btn-light py-1 px-2"
+                      type="button"
+                      id="articleActionsDropdown{{ $article->id }}"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                      title="Altre azioni"
+                    >
+                      <span class="material-symbols-outlined fs-6 align-middle">
+                        more_vert
+                      </span>
+                    </button>
+                    <ul
+                      class="dropdown-menu dropdown-menu-end shadow-sm"
+                      aria-labelledby="articleActionsDropdown{{ $article->id }}"
+                    >
+                      {{-- Dentro la ul.dropdown-menu --}}
+                      <li>
+                        <a
+                          class="dropdown-item small d-flex align-items-center"
+                          href="{{ route('admin.articles.edit', $article) }}"
+                        >
+                          <span class="material-symbols-outlined fs-6 me-2">
+                            edit
+                          </span>
+                          Modifica
+                        </a>
+                      </li>
+
+                      @if ($article->status === 'published')
+                        <li>
+                          <a
+                            href="#"
+                            class="dropdown-item small text-warning d-flex align-items-center"
+                            onclick="confirmStatusChange(this, '{{ route('admin.articles.status.update', ['article' => $article->id, 'newStatus' => 'draft']) }}', 'Sei sicuro di voler annullare la pubblicazione? L\'articolo tornerà una bozza.'); return false;"
+                          >
+                            <span class="material-symbols-outlined fs-6 me-2">
+                              unpublished
+                            </span>
+                            Annulla Pubblicazione
+                          </a>
+                        </li>
+                      @elseif (in_array($article->status, ['draft', 'archived', 'scheduled']))
+                        <li>
+                          <a
+                            href="#"
+                            class="dropdown-item small text-success d-flex align-items-center"
+                            onclick="confirmStatusChange(this, '{{ route('admin.articles.status.update', ['article' => $article->id, 'newStatus' => 'published']) }}', 'Sei sicuro di voler pubblicare ora questo articolo?'); return false;"
+                          >
+                            <span class="material-symbols-outlined fs-6 me-2">
+                              publish
+                            </span>
+                            Pubblica Ora
+                          </a>
+                        </li>
+                      @endif
+
+                      @if ($article->status !== 'archived')
+                        <li>
+                          <a
+                            href="#"
+                            class="dropdown-item small d-flex align-items-center"
+                            onclick="confirmStatusChange(this, '{{ route('admin.articles.status.update', ['article' => $article->id, 'newStatus' => 'archived']) }}', 'Sei sicuro di voler archiviare questo articolo?'); return false;"
+                          >
+                            <span class="material-symbols-outlined fs-6 me-2">
+                              archive
+                            </span>
+                            Archivia
+                          </a>
+                        </li>
+                      @else
+                        <li>
+                          <a
+                            href="#"
+                            class="dropdown-item small d-flex align-items-center"
+                            onclick="confirmStatusChange(this, '{{ route('admin.articles.status.update', ['article' => $article->id, 'newStatus' => 'draft']) }}', 'Sei sicuro di voler ripristinare questo articolo come bozza?'); return false;"
+                          >
+                            <span class="material-symbols-outlined fs-6 me-2">
+                              unarchive
+                            </span>
+                            Ripristina come Bozza
+                          </a>
+                        </li>
+                      @endif
+                      <li>
+                        <hr class="dropdown-divider my-1" />
+                      </li>
+                      <li>
+                        <button
+                          type="button"
+                          class="dropdown-item small text-danger d-flex align-items-center delete-article-btn"
+                          data-article-id="{{ $article->id }}"
+                          data-article-title="{{ addslashes(Str::limit($article->title, 50)) }}"
+                          data-delete-url="{{ route('admin.articles.destroy', $article) }}"
+                        >
+                          <span class="material-symbols-outlined fs-6 me-2">
+                            delete
+                          </span>
+                          Elimina
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          @endforeach
+        </div>
+
+        @if ($articles->hasPages())
+          <div class="mt-4 d-flex justify-content-center">
+            {{ $articles->withQueryString()->links() }}
+          </div>
+        @endif
+      @else
+        <div class="alert alert-secondary text-center py-4">
+          {{-- ... Messaggio "Nessun articolo trovato" ... (codice invariato) --}}
+        </div>
+      @endif
+    </div>
+  </div>
+
+  {{-- Form nascosto per l'aggiornamento dello stato (invariato) --}}
+  <form
+    id="statusUpdateForm"
+    method="POST"
+    class="d-none"
+  >
+    @csrf
+    @method('PATCH')
+  </form>
 </x-app-layout>

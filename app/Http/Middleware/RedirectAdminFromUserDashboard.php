@@ -16,13 +16,9 @@ class RedirectAdminFromUserDashboard
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Se l'utente è autenticato ed è un admin
         if (Auth::check() && Auth::user()->isAdmin()) {
-            // Reindirizzalo alla dashboard admin
             return redirect()->route('admin.dashboard');
         }
-
-        // Altrimenti, procedi con la richiesta originale (mostra la dashboard utente)
         return $next($request);
     }
 }

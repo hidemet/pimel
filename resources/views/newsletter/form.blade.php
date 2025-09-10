@@ -52,20 +52,6 @@
                         <fieldset class="mb-4">
                             <legend class="visually-hidden">Dati personali</legend>
 
-                            {{-- Nome --}}
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                    id="newsletterName" name="name" value="{{ old('name') }}"
-                                    placeholder="Nome Completo" autocomplete="name">
-                                <label for="newsletterName">Nome Completo <abbr title="Campo obbligatorio"
-                                        class="text-danger">*</abbr></label>
-                                <div id="name-help" class="form-text visually-hidden">Inserisci il tuo nome completo
-                                </div>
-                                @error('name')
-                                    <div class="invalid-feedback" role="alert">{{ $message }}</div>
-                                @enderror
-                            </div>
-
                             {{-- Email --}}
                             <div class="form-floating mb-3">
                                 <input type="email" class="form-control @error('email') is-invalid @enderror"
@@ -121,39 +107,11 @@
                             </fieldset>
                         @endif
 
-                        {{-- Sezione consensi --}}
-                        <fieldset class="mb-4">
-                            <legend class="visually-hidden">Consensi e privacy</legend>
-
-                            <div class="form-check">
-                                <input class="form-check-input @error('privacy') is-invalid @enderror" type="checkbox"
-                                    id="privacyNewsletter" name="privacy" value="1"
-                                    {{ old('privacy') ? 'checked' : '' }}>
-                                <label class="form-check-label" for="privacyNewsletter">
-                                    Accetto l'<a href="/privacy-policy" class="link-primary text-decoration-none"
-                                        target="_blank" rel="noopener noreferrer">informativa sulla privacy</a>
-                                    per ricevere la newsletter. <abbr title="Campo obbligatorio"
-                                        class="text-danger">*</abbr>
-                                </label>
-                                <div id="privacy-help" class="form-text visually-hidden">
-                                    È necessario accettare l'informativa sulla privacy per procedere
-                                </div>
-                                @error('privacy')
-                                    <div class="invalid-feedback d-block" role="alert">
-                                        <i class="bi bi-exclamation-circle me-1"></i>{{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                        </fieldset>
-
                         {{-- Azione principale --}}
                         <div class="d-grid">
                             <button type="submit" class="btn btn-dark btn-lg mt-3">
                                 Iscriviti Ora
                             </button>
-                            <div id="submit-help" class="form-text text-center mt-2 small text-muted">
-                                Riceverai una email di conferma all'indirizzo fornito
-                            </div>
                         </div>
                     </form>
                 </section>

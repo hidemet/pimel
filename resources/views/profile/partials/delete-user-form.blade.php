@@ -50,32 +50,27 @@
 
 @push('scripts')
     <script>
-        // Opzionale: se la modale viene mostrata a causa di un errore e l'utente la chiude,
-        // vorremmo evitare che al prossimo F5 (se l'errore persiste) si riapra automaticamente.
-        // Questa è una gestione più avanzata, per ora la modale si riaprirà se gli errori persistono
-        // a meno che non si gestisca lo stato di "data-bs-show" più dinamicamente o si resettino gli error bags.
-        // Per un esame, la funzionalità base di riapertura su errore è accettabile.
+        $(function() {
+            // Seleziona la modale tramite il suo ID usando jQuery.
+            const $confirmUserDeletionModal = $('#confirmUserDeletionModal');
 
-        // Se la modale è stata visualizzata a causa di errori e poi chiusa,
-        // rimuovi l'attributo data-bs-show per evitare che si riapra al refresh
-        // se gli errori sono ancora presenti ma l'utente non ha tentato nuovamente il submit.
-        const confirmUserDeletionModal = document.getElementById('confirmUserDeletionModal');
-        if (confirmUserDeletionModal) {
-            confirmUserDeletionModal.addEventListener('hidden.bs.modal', function() {
-                if (this.hasAttribute('data-bs-show')) {
-                    // Questo non previene la riapertura se la pagina viene ricaricata
-                    // e $errors->userDeletion->isNotEmpty() è ancora true.
-                    // Una soluzione più complessa coinvolgerebbe JS per tracciare il tentativo.
-                    // Per ora, ci affidiamo al fatto che se ci sono errori, la modale viene mostrata.
-                }
-            });
+            // Controlla se l'elemento modale esiste nel DOM prima di aggiungere event listener.
+            if ($confirmUserDeletionModal.length) {
 
-            // Se la modale è aperta al caricamento della pagina a causa di errori,
-            // assicurati che Bootstrap la inizializzi correttamente.
-            @if ($errors->userDeletion->isNotEmpty())
-                var modalInstance = new bootstrap.Modal(confirmUserDeletionModal);
-                modalInstance.show();
-            @endif
-        }
+                // Aggiunge un listener per l'evento 'hidden.bs.modal'.
+                // Questo evento viene scatenato da Bootstrap quando la modale finisce di nascondersi.
+                $confirmUserDeletionModal.on('hidden.bs.modal', function() {
+                    // La logica per prevenire la riapertura al refresh dopo una chiusura manuale
+                    // è complessa e richiederebbe una gestione dello stato lato client.
+                    // Per ora, il comportamento di default (la modale si riapre se ci sono errori) è mantenuto.
+                });
+
+                // Se la direttiva Blade rileva errori di validazione nel bag 'userDeletion',
+                // usa il metodo .modal('show') del plugin jQuery di Bootstrap per mostrare la modale.
+                @if ($errors->userDeletion->isNotEmpty())
+                    $confirmUserDeletionModal.modal('show');
+                @endif
+            }
+        });
     </script>
 @endpush

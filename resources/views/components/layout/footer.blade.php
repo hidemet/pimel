@@ -8,10 +8,6 @@
                     <img src="{{ asset('assets/img/pimel_logo_dark_mode.svg') }}" alt="PIMEL Logo" height="30"
                         class="me-2">PIMEL
                 </h6>
-                <p>
-                    Pedagogia In Movimento: supporto e consulenza per genitori, insegnanti e professionisti
-                    dell'educazione.
-                </p>
             </div>
 
             <!-- Colonna Link Utili -->
@@ -55,8 +51,5 @@
                 </a>
             </div>
         </div>
-    </div>
-    <div class="text-center p-4 border-top mt-4">
-        © {{ date('Y') }} PIMEL - Pedagogia in Movimento. Tutti i diritti riservati.
     </div>
 </footer>

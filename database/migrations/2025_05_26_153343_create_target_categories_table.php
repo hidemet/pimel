@@ -6,25 +6,29 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
-        {
-            Schema::create('target_categories', function (Blueprint $table) {
-                $table->id();
-                $table->string('name')->unique(); // Es. "Genitori"
-                $table->string('slug')->unique(); // Es. "genitori"
-                $table->string('icon_class')->nullable(); // Es. "family_restroom"
-                $table->text('description')->nullable();
-                $table->timestamps();
-            });
-        }
-    /**
-     * Reverse the migrations.
-     */
+    {
+        Schema::create('target_categories', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+            $table->string('slug')->unique();
+            $table->string('icon_class')->nullable();
+            $table->text('description')->nullable();
+            $table->timestamps();
+        });
+
+        // Aggiungo il foreign key alla tabella services dopo che target_categories esiste
+        Schema::table('services', function (Blueprint $table) {
+            $table->foreign('target_category_id')->references('id')->on('target_categories')->nullOnDelete();
+        });
+    }
+
     public function down(): void
     {
+        Schema::table('services', function (Blueprint $table) {
+            $table->dropForeign(['target_category_id']);
+        });
+
         Schema::dropIfExists('target_categories');
     }
 };

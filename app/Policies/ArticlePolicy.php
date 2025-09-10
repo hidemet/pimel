@@ -8,16 +8,6 @@ use Illuminate\Auth\Access\Response;
 
 class ArticlePolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     * Per la lista pubblica degli articoli, generalmente non si applica qui,
-     * ma nel controller ArticleController@index.
-     * Questa policy è più per la singola risorsa.
-     */
-    // public function viewAny(User $user): bool
-    // {
-    //     //
-    // }
 
     /**
      * Determine whether the user can view the model.
@@ -28,15 +18,24 @@ class ArticlePolicy
      */
     public function view(?User $user, Article $article): bool
     {
+        // Normalizza eventuali vecchi stati inglesi non migrati
+        $legacyMap = [
+            'published' => 'Pubblicato',
+            'draft' => 'Bozza',
+            'archived' => 'Archiviato',
+            'scheduled' => 'Programmata',
+        ];
+        if (isset($legacyMap[$article->status])) {
+            $article->status = $legacyMap[$article->status];
+        }
+
         // Se l'articolo è pubblicato, tutti possono vederlo.
-        if ($article->status === 'published') {
+        if ($article->status === 'Pubblicato') {
             return true;
         }
 
         // Se l'articolo NON è pubblicato:
         // Solo gli utenti autenticati che sono amministratori possono vederlo.
-        // L'operatore "?->" (null safe operator) è utile qui.
-        // Se $user è null, $user?->isAdmin() restituirà null, che viene trattato come false in un contesto booleano.
         return $user?->isAdmin() ?? false;
     }
 

@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Genitori",
+    "icon_class": "family_restroom",
+    "description": "Servizi dedicati a mamme, papà e figure genitoriali."
+  },
+  {
+    "name": "Professionisti",
+    "icon_class": "work",
+    "description": "Servizi per educatori, insegnanti, pedagogisti."
+  },
+  {
+    "name": "Scuole",
+    "icon_class": "corporate_fare",
+    "description": "Servizi rivolti a istituzioni scolastiche ed educative."
+  },
+  {
+    "name": "Studenti",
+    "icon_class": "school",
+    "description": "Servizi di supporto allo studio e orientamento."
+  },
+  {
+    "name": "Altri Servizi",
+    "icon_class": "room_service",
+    "description": "Servizi speciali o percorsi non categorizzati."
+  }
+]

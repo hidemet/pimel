@@ -11,15 +11,10 @@ class DatabaseSeeder extends Seeder
     {
         User::factory()->manuelaDonati()->create();
         User::factory(5)->create();
-        User::factory()->admin()->create([
-            'name'     => 'Nicholas Dumas',
-            'email'    => 'n.dumas@studenti.unibs.it',
-            'password' => bcrypt('PimelAdmin!2024'),
-        ]);
 
         $this->call([
             RubricSeeder::class,
-            TargetCategorySeeder::class, // AGGIUNTO: Prima di ServiceSeeder
+            TargetCategorySeeder::class, 
             ServiceSeeder::class,
             ArticleSeeder::class,
             CommentSeeder::class,

@@ -3,132 +3,143 @@
 namespace Database\Factories;
 
 use App\Models\Article;
-use App\Models\User; // Per associare un autore
+use App\Models\Rubric;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-// Per lo slug e l'excerpt
 
-class ArticleFactory extends Factory {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
+class ArticleFactory extends Factory
+{
     protected $model = Article::class;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array {
-        $title = fake()->unique()->sentence( rand( 5, 10 ) );
-                                        // Titolo dell'articolo
-        $bodyParagraphs = rand( 10, 25 ); // Numero di paragrafi per il corpo
-        $body           = '';
-        for ( $i = 0; $i < $bodyParagraphs; $i++ ) {
-            $body .= '<p>' . fake()->paragraph( rand( 5, 15 ) ) . "</p>\n";
-            if ( rand( 1, 5 ) === 1 && $i < $bodyParagraphs - 1 ) {
-                // Aggiunge un sottotitolo H2-H4 occasionalmente
-                $body .= '<h' . rand( 2, 4 ) . '>' . fake()->sentence( rand( 4, 8 ) )
-                . '</h' . rand( 2, 4 ) . ">\n";
-            }
-        }
+    // Costanti per configurazione
+    private const DEFAULT_DESCRIPTION_WORDS = 30;
 
-        $publishedAt = fake()->boolean( 85 ) ? fake()->dateTimeThisYear() :
-        null; // 85% di probabilità di essere pubblicato quest'anno
-        $status = $publishedAt ? ( ( new \DateTime( $publishedAt
-                ->format( 'Y-m-d H:i:s' ) ) ) > now() ? 'scheduled' : 'published' ) : 'draft';
-        // Status basato su published_at
-
-        if ( $status === 'scheduled' ) {
-            // se è schedulato, published_at deve essere nel futuro
-            $publishedAt = fake()->dateTimeBetween( '+1 day', '+1 month' );
-        } elseif ( $status === 'published' ) {
-            // se è pubblicato, published_at deve essere nel passato
-            $publishedAt = fake()->dateTimeBetween( '-1 year', '-1 day' );
-        }
-
-        // Calcolo approssimativo del tempo di lettura (200 parole al minuto)
-        $wordCount   = str_word_count( strip_tags( $body ) );
-        $readingTime = ceil( $wordCount / 200 );
+    public function definition(): array
+    {
+        $title = $this->generateTitle();
+        $body = $this->generateBody();
+        $randomState = $this->generateRandomState();
 
         return [
-            'user_id'          => User::inRandomOrder()->first()->id ??
-            User::factory(), // Prende un utente casuale o ne crea uno se non ce ne sono
-            'title'            => $title,
-            // Lo slug è gestito dal mutator nel modello Article se vuoto
-            // 'slug' => Str::slug($title),
-            'excerpt'          => Str::words( strip_tags( fake()->paragraph( 5 ) ), 30,
-                '...' ),                      // Excerpt generato
-            'body'             => $body, // Corpo dell'articolo con paragrafi
-            'image_path'       => null,
-            // Per ora null, potremmo aggiungere logica per placeholder
-
-            // 'image_path' => 'placeholders/article_image_' . rand(1, 5) . '.jpg', // Esempio se avessi placeholder
-            'published_at'     => $publishedAt,
-            'reading_time'     => $readingTime,
-            'status'           => $status,
-            'meta_description' => Str::limit( strip_tags( $body ), 155 ),
-            // Meta description dall'inizio del corpo
-            'meta_keywords'    => implode( ', ', fake()->words( rand( 5, 10 ) ) ),
-            // Keywords fittizie
+            'user_id'       => User::factory(),
+            'rubric_id'     => Rubric::factory(),
+            'title'         => $title,
+            'description'   => $this->generateDescription($body),
+            'body'          => $body,
+            'image_path'    => $this->generateImagePath(),
+            'reading_time'  => $this->generateReadingTime(),
+            'status'        => $randomState['status'],
+            'published_at'  => $randomState['published_at'],
         ];
     }
 
-    /**
-     * Configure the model factory.
-     *
-     * @return $this
-     */
-    public function configure() {
-        return $this->afterCreating( function ( Article $article ) {
-            // Logica da eseguire dopo la creazione di un articolo
 
-            // Ad esempio, associare rubriche. Lo faremo nel seeder per maggiore controllo.
-        } );
+    private function generateTitle(): string
+    {
+        return fake()->unique()->sentence(fake()->numberBetween(4, 12));
+    }
+
+    private function generateBody(): string
+    {
+        $paragraphs = fake()->paragraphs(fake()->numberBetween(6, 20));
+
+        return '<p>' . implode("</p>\n\n<p>", $paragraphs) . '</p>';
+    }
+
+    private function generateDescription(string $body): string
+    {
+        return Str::words(
+            strip_tags($body),
+            fake()->numberBetween(25, self::DEFAULT_DESCRIPTION_WORDS + 5),
+            '...'
+        );
+    }
+
+    private function generateReadingTime(): int
+    {
+        return fake()->numberBetween(8, 18);
+    }
+
+    private function generateImagePath(): string
+    {
+        return "placeholders/article_placeholder.jpg";
     }
 
     /**
-     * Indicate that the article is published.
+     * Genera uno stato casuale per l'articolo
      */
+    private function generateRandomState(): array
+    {
+        $states = [
+            [
+                'status' => 'Pubblicato',
+                'published_at' => fake()->dateTimeBetween('-180 days', 'now'),
+            ],
+            [
+                'status' => 'Bozza',
+                'published_at' => null,
+            ],
+            [
+                'status' => 'Archiviato',
+                'published_at' => fake()->optional(0.8)->dateTimeBetween('-2 years', '-6 months'),
+            ],
+        ];
+
+        return fake()->randomElement($states);
+    }
+
+    // STATI SPECIFICI (per forzare uno stato particolare se necessario)
+
     public function published(): static
     {
-        return $this->state( fn( array $attributes ) => [
-            'published_at' => fake()->dateTimePast(),
-            'status'       => 'published',
-        ] );
+        return $this->state(fn() => [
+            'status'       => 'Pubblicato',
+            'published_at' => fake()->dateTimeBetween('-180 days', 'now'),
+        ]);
     }
 
-    /**
-     * Indicate that the article is a draft.
-     */
     public function draft(): static
     {
-        return $this->state( fn( array $attributes ) => [
+        return $this->state(fn() => [
+            'status'       => 'Bozza',
             'published_at' => null,
-            'status'       => 'draft',
-        ] );
+        ]);
     }
 
-    /**
-     * Indicate that the article is scheduled.
-     */
-    public function scheduled(): static
+    public function archived(): static
     {
-        return $this->state( fn( array $attributes ) => [
-            'published_at' => fake()->dateTimeBetween( '+1 day', '+1 month' ),
-            'status'       => 'scheduled',
-        ] );
+        return $this->state(fn() => [
+            'status'       => 'Archiviato',
+            'published_at' => fake()->optional(0.8)->dateTimeBetween('-2 years', '-6 months'),
+        ]);
     }
 
-    /**
-     * Assign a specific author to the article.
-     */
-    public function authoredBy( User $author ): static
+    public function byAuthor($userId): static
     {
-        return $this->state( fn( array $attributes ) => [
-            'user_id' => $author->id,
-        ] );
+        return $this->state(['user_id' => $userId]);
+    }
+
+    public function inRubric($rubricId): static
+    {
+        return $this->state(['rubric_id' => $rubricId]);
+    }
+
+    public function withTitle(string $title): static
+    {
+        return $this->state(['title' => $title]);
+    }
+
+    public function withImage(string $imagePath): static
+    {
+        return $this->state(['image_path' => $imagePath]);
+    }
+
+    public function recent(): static
+    {
+        return $this->state([
+            'status' => 'Pubblicato',
+            'published_at' => fake()->dateTimeBetween('-1 month', 'now'),
+        ]);
     }
 }

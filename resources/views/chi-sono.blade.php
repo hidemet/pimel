@@ -1,4 +1,4 @@
-<x-app-layout>
+    <x-app-layout>
     @section('title', 'Chi Sono - Manuela Donati, Pedagogista PIMEL')
     @section('description',
         'Scopri chi è Manuela Donati, pedagogista ed educatrice, fondatrice di PIMEL - Pedagogia In
@@ -24,7 +24,7 @@
         </section>
 
         {{-- Contenuto principale centrato --}}
-        <div class="container page-content-container mt-5 mb-5">
+        <div class="container mt-5 mb-5">
             <div class="row justify-content-center">
                 <div class="col-lg-9 col-xl-7">
                     <article>

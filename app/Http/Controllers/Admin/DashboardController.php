@@ -1,18 +1,17 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
+// use Illuminate\View\View; // Lascialo commentato per ora
 
 class DashboardController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
-    public function __invoke(Request $request): View
+    public function __invoke(Request $request) 
     {
-        return view('admin.dashboard');
+        $breadcrumbs = [
+            ['label' => 'Dashboard']
+        ];
+        return view('admin.dashboard', compact('breadcrumbs'));
     }
 }
