@@ -4,60 +4,41 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Illuminate\Http\JsonResponse;
 
-class CommentAdminController extends Controller
-{
-    /**
-     * Mostra la lista dei commenti con filtri e paginazione.
-     */
-    public function index(Request $request): View
-    {
-        // Valori di default per i filtri
-        $currentStatusFilter = $request->input('status', 'pending'); // Default: 'pending'
-
-        // Conteggi per i pulsanti di filtro
-        $statusCounts = Comment::query()
-            ->selectRaw('is_approved, count(*) as total')
-            ->groupBy('is_approved')
-            ->pluck('total', 'is_approved');
-
-        $commentStatuses = [
-            'pending'   => ['text' => 'In Attesa', 'count' => $statusCounts->get(0, 0)],
-            'approved'  => ['text' => 'Approvati', 'count' => $statusCounts->get(1, 0)],
-        ];
+class CommentAdminController extends Controller {
+    public function index(Request $request): View {
+        $currentStatusFilter = $request->input('status', 'pending');
 
         // Query base per i commenti
         $query = Comment::query()
-            ->with(['user', 'article:id,title,slug']) // Eager loading per evitare N+1
+            ->with(['user', 'article:id,title,slug'])
             ->orderBy('created_at', 'desc');
 
         // Applica il filtro per stato
-        if ($currentStatusFilter === 'pending') {
+        if ('pending' === $currentStatusFilter) {
             $query->where('is_approved', false);
         } else {
             $query->where('is_approved', true);
         }
-        
+
         $comments = $query->paginate(20)->withQueryString();
 
         $breadcrumbs = [
             ['label' => 'Dashboard', 'url' => route('admin.dashboard')],
-            ['label' => 'Moderazione Commenti']
+            ['label' => 'Moderazione Commenti'],
         ];
 
         return view('admin.comments.index', compact(
             'comments',
-            'commentStatuses',
             'currentStatusFilter',
             'breadcrumbs'
         ));
     }
 
-    public function update(Request $request, Comment $comment): JsonResponse
-    {
+    public function update(Request $request, Comment $comment): JsonResponse {
         $validated = $request->validate([
             'is_approved' => 'required|boolean',
         ]);
@@ -74,11 +55,7 @@ class CommentAdminController extends Controller
         ]);
     }
 
-    /**
-     * Rimuove un commento dal database.
-     */
-    public function destroy(Comment $comment): JsonResponse
-    {
+    public function destroy(Comment $comment): JsonResponse {
         $commentId = $comment->id;
         $comment->delete();
 

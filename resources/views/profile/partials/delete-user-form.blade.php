@@ -12,7 +12,7 @@
         aria-hidden="true" @if ($errors->userDeletion->isNotEmpty()) data-bs-show="true" @endif {{-- Mostra la modale se ci sono errori di validazione --}}>
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <form method="post" action="{{ route('profile.destroy') }}" class="p-0"> {{-- p-0 per non avere padding doppio --}}
+                <form method="post" action="{{ route('profile.destroy') }}" class="p-0">
                     @csrf
                     @method('delete')
 
@@ -51,7 +51,6 @@
 @push('scripts')
     <script>
         $(function() {
-            // Seleziona la modale tramite il suo ID usando jQuery.
             const $confirmUserDeletionModal = $('#confirmUserDeletionModal');
 
             // Controlla se l'elemento modale esiste nel DOM prima di aggiungere event listener.
@@ -60,13 +59,10 @@
                 // Aggiunge un listener per l'evento 'hidden.bs.modal'.
                 // Questo evento viene scatenato da Bootstrap quando la modale finisce di nascondersi.
                 $confirmUserDeletionModal.on('hidden.bs.modal', function() {
-                    // La logica per prevenire la riapertura al refresh dopo una chiusura manuale
-                    // è complessa e richiederebbe una gestione dello stato lato client.
-                    // Per ora, il comportamento di default (la modale si riapre se ci sono errori) è mantenuto.
+
                 });
 
-                // Se la direttiva Blade rileva errori di validazione nel bag 'userDeletion',
-                // usa il metodo .modal('show') del plugin jQuery di Bootstrap per mostrare la modale.
+        
                 @if ($errors->userDeletion->isNotEmpty())
                     $confirmUserDeletionModal.modal('show');
                 @endif

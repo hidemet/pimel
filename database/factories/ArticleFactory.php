@@ -12,28 +12,24 @@ class ArticleFactory extends Factory
 {
     protected $model = Article::class;
 
-    // Costanti per configurazione
     private const DEFAULT_DESCRIPTION_WORDS = 30;
 
     public function definition(): array
     {
         $title = $this->generateTitle();
         $body = $this->generateBody();
-        $randomState = $this->generateRandomState();
 
         return [
-            'user_id'       => User::factory(),
-            'rubric_id'     => Rubric::factory(),
-            'title'         => $title,
-            'description'   => $this->generateDescription($body),
-            'body'          => $body,
-            'image_path'    => $this->generateImagePath(),
-            'reading_time'  => $this->generateReadingTime(),
-            'status'        => $randomState['status'],
-            'published_at'  => $randomState['published_at'],
+            'user_id' => User::factory(),
+            'rubric_id' => Rubric::factory(),
+            'title' => $title,
+            'description' => $this->generateDescription($body),
+            'body' => $body,
+            'image_path' => $this->generateImagePath(),
+            'reading_time' => $this->generateReadingTime(),
+            'published_at' => $this->generatePublishedAt(),
         ];
     }
-
 
     private function generateTitle(): string
     {
@@ -44,7 +40,7 @@ class ArticleFactory extends Factory
     {
         $paragraphs = fake()->paragraphs(fake()->numberBetween(6, 20));
 
-        return '<p>' . implode("</p>\n\n<p>", $paragraphs) . '</p>';
+        return '<p>'.implode("</p>\n\n<p>", $paragraphs).'</p>';
     }
 
     private function generateDescription(string $body): string
@@ -63,57 +59,17 @@ class ArticleFactory extends Factory
 
     private function generateImagePath(): string
     {
-        return "placeholders/article_placeholder.jpg";
+        return 'placeholders/article_placeholder_3.jpg';
     }
 
-    /**
-     * Genera uno stato casuale per l'articolo
-     */
-    private function generateRandomState(): array
+
+     // Genera una data di pubblicazione casuale nel passato.
+    private function generatePublishedAt()
     {
-        $states = [
-            [
-                'status' => 'Pubblicato',
-                'published_at' => fake()->dateTimeBetween('-180 days', 'now'),
-            ],
-            [
-                'status' => 'Bozza',
-                'published_at' => null,
-            ],
-            [
-                'status' => 'Archiviato',
-                'published_at' => fake()->optional(0.8)->dateTimeBetween('-2 years', '-6 months'),
-            ],
-        ];
-
-        return fake()->randomElement($states);
+        return fake()->dateTimeBetween('-180 days', 'now');
     }
 
-    // STATI SPECIFICI (per forzare uno stato particolare se necessario)
-
-    public function published(): static
-    {
-        return $this->state(fn() => [
-            'status'       => 'Pubblicato',
-            'published_at' => fake()->dateTimeBetween('-180 days', 'now'),
-        ]);
-    }
-
-    public function draft(): static
-    {
-        return $this->state(fn() => [
-            'status'       => 'Bozza',
-            'published_at' => null,
-        ]);
-    }
-
-    public function archived(): static
-    {
-        return $this->state(fn() => [
-            'status'       => 'Archiviato',
-            'published_at' => fake()->optional(0.8)->dateTimeBetween('-2 years', '-6 months'),
-        ]);
-    }
+    // METODI DI CONVENIENZA
 
     public function byAuthor($userId): static
     {
@@ -138,7 +94,6 @@ class ArticleFactory extends Factory
     public function recent(): static
     {
         return $this->state([
-            'status' => 'Pubblicato',
             'published_at' => fake()->dateTimeBetween('-1 month', 'now'),
         ]);
     }

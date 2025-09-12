@@ -1,4 +1,3 @@
-{{-- resources/views/blog/show.blade.php --}}
 <x-app-layout>
   @section('title', $article->title . ' - Blog PIMEL')
   @section('description', $article->description ? Str::limit(strip_tags($article->description), 160) : Str::limit(strip_tags($article->body), 160))
@@ -26,7 +25,6 @@
 
       <div class="row justify-content-center">
         <div class="col-lg-8 col-xl-7">
-          {{-- Colonna leggermente più larga per una migliore leggibilità --}}
 
           {{-- Header Articolo --}}
           <header class="mb-5 text-center">
@@ -87,10 +85,6 @@
                 </div>
 
                 <div class="d-flex align-items-center gap-3">
-                  {{--
-                    BOTTONE "MI PIACE" INTERATTIVO E UNIFICATO
-                    Questo è il blocco di codice corretto.
-                  --}}
                   @php
                     $hasLiked = $article->has_liked ?? false;
                   @endphp
@@ -139,7 +133,7 @@
             </div>
           </header>
 
-          {{-- Immagine e Corpo Articolo --}}
+          {{-- Immagine  --}}
           @if ($article->image_path)
             <figure class="figure mb-5 w-100">
               <img

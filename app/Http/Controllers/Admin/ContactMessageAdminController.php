@@ -9,9 +9,7 @@ use Illuminate\View\View;
 
 class ContactMessageAdminController extends Controller
 {
-    /**
-     * Mostra la lista dei messaggi di contatto.
-     */
+    
     public function index(Request $request): View
     {
         // Query per recuperare i messaggi, ordinati dal più recente
@@ -21,7 +19,7 @@ class ContactMessageAdminController extends Controller
 
         $breadcrumbs = [
             ['label' => 'Dashboard', 'url' => route('admin.dashboard')],
-            ['label' => 'Messaggi Ricevuti']
+            ['label' => 'Messaggi Ricevuti'],
         ];
 
         return view('admin.contacts.index', compact('messages', 'breadcrumbs'));

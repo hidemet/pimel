@@ -5,10 +5,10 @@
 
   <main class="container-fluid px-3 px-md-4 mt-4 mt-md-5 mb-5">
     <div class="row justify-content-center">
-      <div class="col-12 col-lg-10 col-xl-8">
-        <div class="row g-4">
+      <div class="col-12 col-lg-8 col-xl-6">
+        <div class="row g-4 justify-content-center">
           <!-- Sezione Modulo -->
-          <section class="col-lg-7">
+          <section class="col-12">
             <article class="bg-form-section rounded-5 p-5 p-md-5">
               {{-- Messaggi di sessione --}}
               @if (session('success'))
@@ -211,77 +211,6 @@
               </div>
             </article>
           </section>
-
-          <!-- Sezione Informazioni -->
-          <section class="col-lg-5 p-5">
-            {{-- Email Card --}}
-            <address class="card border-0 mb-3">
-              <div class="card-body">
-                <div class="d-flex align-items-center">
-                  <div>
-                    <h3 class="mb-1 fw-semibold h6">Email</h3>
-                    <a
-                      href="mailto:{{ config('mail.from.address', 'info@pimel.it') }}"
-                      class="text-decoration-none"
-                    >
-                      {{ config('mail.from.address', 'info@pimel.it') }}
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </address>
-
-            {{-- Social Media Card --}}
-            <section class="card border-0">
-              <div class="card-body">
-                <h3 class="mb-3 fw-semibold d-flex align-items-center h6">
-                  Seguimi sui Social
-                </h3>
-                <nav class="d-flex gap-2 flex-wrap">
-                  <a
-                    href="#"
-                    class="btn btn-outline-primary rounded-circle p-2"
-                    style="width: 2.5rem; height: 2.5rem"
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="top"
-                    title="Facebook"
-                  >
-                    <i class="bi bi-facebook"></i>
-                  </a>
-                  <a
-                    href="#"
-                    class="btn btn-outline-primary rounded-circle p-2"
-                    style="width: 2.5rem; height: 2.5rem"
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="top"
-                    title="Instagram"
-                  >
-                    <i class="bi bi-instagram"></i>
-                  </a>
-                  <a
-                    href="#"
-                    class="btn btn-outline-primary rounded-circle p-2"
-                    style="width: 2.5rem; height: 2.5rem"
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="top"
-                    title="YouTube"
-                  >
-                    <i class="bi bi-youtube"></i>
-                  </a>
-                  <a
-                    href="#"
-                    class="btn btn-outline-primary rounded-circle p-2"
-                    style="width: 2.5rem; height: 2.5rem"
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="top"
-                    title="Telegram"
-                  >
-                    <i class="bi bi-telegram"></i>
-                  </a>
-                </nav>
-              </div>
-            </section>
-          </section>
         </div>
       </div>
     </div>
@@ -289,13 +218,11 @@
 
   @push('scripts')
     <script>
-      // Usa la sintassi standard di jQuery per eseguire il codice al caricamento del DOM.
       $(function () {
         const form = $('#contactForm');
         const submitBtn = $('#submitBtn');
 
         form.on('submit', function (event) {
-          // Usa il metodo nativo del form per la validazione HTML5.
           if (!this.checkValidity()) {
             event.preventDefault();
             event.stopPropagation();
@@ -308,7 +235,6 @@
               .removeClass('d-none');
           }
 
-          // Aggiunge la classe di Bootstrap per mostrare i feedback di validazione.
           form.addClass('was-validated');
         });
       });

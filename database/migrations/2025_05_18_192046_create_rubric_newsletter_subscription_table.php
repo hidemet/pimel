@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::create('rubric_newsletter_subscription', function (Blueprint $table) {
@@ -14,10 +13,10 @@ return new class extends Migration
             $table->unsignedBigInteger('rubric_id');
             $table->timestamps();
 
-            // Foreign keys con nomi espliciti più corti
-            $table->foreign('newsletter_subscription_id', 'rns_newsletter_fk')
+            // Uso dei Foreign keys con nomi più corti per evitare l'errore sulla lunghezza
+            $table->foreign('newsletter_subscription_id', 'fk_newsletter_subscription')
                 ->references('id')->on('newsletter_subscriptions')->cascadeOnDelete();
-            $table->foreign('rubric_id', 'rns_rubric_fk')
+            $table->foreign('rubric_id', 'fk_rubric')
                 ->references('id')->on('rubrics')->cascadeOnDelete();
         });
     }

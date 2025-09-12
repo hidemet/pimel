@@ -8,18 +8,17 @@
   @endisset
 
   <div class="container py-4">
-    <div class="card shadow-sm">
+    <div class="card shadow-sm rounded-3">
       <div class="table-responsive">
         @if ($messages->isNotEmpty())
-          <table class="table table-hover align-middle mb-0">
-            <thead class="table-light">
+          <table class="table table-hover align-middle mb-0 rounded-3 overflow-hidden">
+            <thead class="table-dark">
               <tr>
-                <th style="width: 25%">Mittente</th>
-                <th style="width: 25%">Oggetto / Servizio</th>
-                <th style="width: 35%">Anteprima Messaggio</th>
+                <th style="width: 35%">Mittente</th>
+                <th style="width: 45%">Oggetto / Servizio</th>
                 <th
                   class="text-center"
-                  style="width: 15%"
+                  style="width: 20%"
                 >
                   Data Invio
                 </th>
@@ -60,11 +59,6 @@
                         {{ $message->service_of_interest }}
                       </span>
                     @endif
-                  </td>
-                  <td>
-                    <p class="mb-0 small text-muted fst-italic">
-                      "{{ Str::limit($message->message, 80) }}"
-                    </p>
                   </td>
                   <td class="text-center small text-muted">
                     {{ $message->created_at->isoFormat('D MMM YYYY') }}
@@ -141,20 +135,12 @@
           <hr />
           <strong class="d-block mb-2">Messaggio Completo:</strong>
           <div
-            id="modal-body"
+            id="modal-message-body"
             class="p-3 bg-light rounded"
             style="white-space: pre-wrap"
           ></div>
         </div>
         <div class="modal-footer">
-          <a
-            href="#"
-            id="modal-reply-btn"
-            class="btn btn-primary"
-          >
-            <i class="bi bi-reply-fill me-1"></i>
-            Rispondi
-          </a>
           <button
             type="button"
             class="btn btn-secondary"
@@ -167,44 +153,36 @@
     </div>
   </div>
 
-  @push('scripts')
-    <script>
-      // Esegui lo script quando il DOM è pronto, usando la sintassi jQuery.
-      $(function () {
-        // Seleziona l'elemento della modale una sola volta per efficienza.
-        const messageModal = $('#messageModal');
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const messageModal = document.getElementById('messageModal');
 
-        // Ascolta l'evento 'show.bs.modal' che Bootstrap emette prima di mostrare la modale.
-        messageModal.on('show.bs.modal', function (event) {
-          // event.relatedTarget è l'elemento che ha scatenato l'evento (la riga <tr> cliccata).
-          const row = $(event.relatedTarget);
+      // Interfaccia Bootstrap in JavaScript vanilla
+      messageModal.addEventListener('show.bs.modal', function (event) {
+        const triggerElement = event.relatedTarget;
+        const row = triggerElement.closest('tr.contact-message-row');
 
-          // Recupera i dati dagli attributi data-* della riga.
-          const name = row.data('message-name');
-          const email = row.data('message-email');
-          const subject = row.data('message-subject');
-          const service = row.data('message-service');
-          const body = row.data('message-body');
-          const date = row.data('message-date');
+        if (!row) return;
 
-          // Popola gli elementi all'interno della modale con i dati recuperati.
-          messageModal.find('#modal-name').text(name);
-          messageModal
-            .find('#modal-email')
-            .text(email)
-            .attr('href', 'mailto:' + email);
-          messageModal.find('#modal-subject').text(subject);
-          messageModal.find('#modal-service').text(service);
-          messageModal.find('#modal-body').text(body);
-          messageModal.find('#modal-date').text(date);
-          messageModal
-            .find('#modal-reply-btn')
-            .attr(
-              'href',
-              `mailto:${email}?subject=Re: ${encodeURIComponent(subject)}`
-            );
-        });
+        // Recupera i dati dagli attributi con JavaScript vanilla
+        const name = row.getAttribute('data-message-name') || 'N/A';
+        const email = row.getAttribute('data-message-email') || 'N/A';
+        const subject = row.getAttribute('data-message-subject') || 'N/A';
+        const service = row.getAttribute('data-message-service') || 'N/A';
+        const body = row.getAttribute('data-message-body') || 'N/A';
+        const date = row.getAttribute('data-message-date') || 'N/A';
+
+        // Manipolazione DOM con jQuery (più pulita)
+        $('#modal-name').text(name);
+        $('#modal-email')
+          .text(email)
+          .attr('href', email !== 'N/A' ? 'mailto:' + email : '#');
+        $('#modal-subject').text(subject);
+        $('#modal-service').text(service);
+        $('#modal-message-body').text(body);
+        $('#modal-date').text(date);
       });
-    </script>
-  @endpush
+    });
+  </script>
+  </script>
 </x-app-layout>

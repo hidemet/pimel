@@ -1,4 +1,3 @@
-{{-- resources/views/components/shared/service-promo-card.blade.php --}}
 <div class="card sm h-100 rounded-4 p-2 bg-transparent">
     <div class="card-body text-center">
         <h5 class="card-title mb-3">

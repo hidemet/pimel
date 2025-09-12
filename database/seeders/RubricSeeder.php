@@ -25,6 +25,7 @@ class RubricSeeder extends Seeder
     {
         $filePath = database_path('data/rubrics.json');
         $jsonContent = file_get_contents($filePath);
+
         return json_decode($jsonContent, true) ?? [];
     }
 }

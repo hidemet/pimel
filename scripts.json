@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "fix": "vendor/bin/php-cs-fixer fix",
+    "fix-dry": "vendor/bin/php-cs-fixer fix --dry-run --diff",
+    "fix-check": "vendor/bin/php-cs-fixer check --diff"
+  }
+}

@@ -8,12 +8,11 @@ return new class extends Migration {
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
+    public function up(): void {
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('rubric_id')->nullable()->constrained('rubrics')->nullOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete(); // articolo cancellato se viene cancellato l'autore
+            $table->foreignId('rubric_id')->nullable()->constrained('rubrics')->nullOnDelete(); // articolo rimane, anche se viene cancellata la rubrica.
             $table->string('title');
             $table->string('slug')->unique();
             $table->text('description')->nullable();
@@ -21,7 +20,6 @@ return new class extends Migration {
             $table->string('image_path')->nullable();
             $table->timestamp('published_at')->nullable();
             $table->integer('reading_time')->nullable()->unsigned();
-            $table->enum('status', ['Bozza', 'Pubblicato', 'Archiviato'])->default('Bozza');
             $table->timestamps();
         });
     }
@@ -29,8 +27,7 @@ return new class extends Migration {
     /**
      * Reverse the migrations.
      */
-    public function down(): void
-    {
+    public function down(): void {
         Schema::dropIfExists('articles');
     }
 };

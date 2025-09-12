@@ -18,13 +18,11 @@
                                 Modifica Profilo
                             </a>
                             @if (Route::has('profile.newsletter.edit'))
-                                {{-- Se hai implementato le preferenze newsletter --}}
                                 <a href="{{ route('profile.newsletter.edit') }}" class="btn btn-outline-secondary">
                                     <span class="material-symbols-outlined fs-6 align-middle me-1">mail</span>
                                     Preferenze Newsletter
                                 </a>
                             @endif
-                            {{-- Aggiungi altri link utili per l'utente --}}
                         </div>
                     </div>
                 </div>

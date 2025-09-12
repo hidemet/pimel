@@ -1,25 +1,17 @@
 <x-app-layout>
   @section('title', 'Pedagogia In Movimento - Conoscere, Capire, Educare')
-  {{-- Titolo aggiornato per il browser --}}
-  @section(
-    'description',
-    'Manuela Donati, Pedagogista ed Educatrice, divulga la pedagogia in Italia con PIMEL.
-              Risorse e supporto per genitori, educatori e studenti.'
-  )
-  <section
-    class="bg-herosection text-white d-flex flex-column justify-content-center pt-5"
-  >
+  @section('description', 'Manuela Donati, Pedagogista ed Educatrice, divulga la pedagogia in Italia con il progetto Pedagogia in Movimento.')
+  <section class="bg-herosection text-white pt-5">
     <div class="container">
-      <div class="row align-items-center align-items-lg-end gy-4 gx-lg-5">
-        <div class="col-lg-7 text-center text-lg-start mb-4 mb-lg-0 pb-lg-4">
-          <h1 class="display-6 fw-medium mb-3">
-            Pedagogia in Movimento: Conoscere, Capire, Educare
+      <div class="row align-items-center gy-4 gx-lg-5">
+        <div class="col-lg-7 text-center text-lg-start mb-4">
+          <h1 class="display-6 fw-medium mb-4">
+            Benvenuti su Pedagogia in Movimento
           </h1>
           <p class="h5 fw-normal mb-4">
-            👋 Ciao, sono Manuela Donati, Pedagogista ed Educatrice. Ho fondato
-            il progetto "Pedagogia in Movimento" per divulgare la pedagogia in
-            Italia. Credo fermamente che possa contribuire a migliorare il
-            benessere della nostra società e delle famiglie.
+            👋 Ciao, io sono Manuela Donati, una pedagogista ed educatrice. Ho
+            fondato il progetto Pedagogia in Movimento per divulgare la
+            pedagogia in Italia.
           </p>
           <p class="lead mb-4">
             Qui trovi risorse pratiche, approfondimenti e supporto pensati per
@@ -42,7 +34,7 @@
             </a>
           </div>
         </div>
-        <div class="col-lg-4 text-center align-self-lg-end">
+        <div class="col-lg-4 text-center">
           <img
             src="{{ asset('assets/img/pedagogista-hero.png') }}"
             alt="Dott.ssa Manuela Donati - Pedagogista ed Educatrice"
@@ -57,12 +49,7 @@
     <div class="container">
       <div class="row gx-lg-5">
         <div class="col-lg-4">
-          <div
-            class="sticky-top"
-            style="top: 100px"
-          >
-            <h2 class="h3 fw-semibold mb-3">Ultimi articoli dal Blog</h2>
-          </div>
+          <h2 class="h3 fw-semibold mb-3">Ultimi articoli dal Blog</h2>
         </div>
 
         <div class="col-lg-8">
@@ -83,8 +70,8 @@
               </a>
             </div>
           @else
-            <div class="text-center py-5 border rounded-3 bg-light">
-              <p class="text-muted mb-0">
+            <div class="text-center py-5">
+              <p>
                 Nessun articolo disponibile al momento.
               </p>
             </div>

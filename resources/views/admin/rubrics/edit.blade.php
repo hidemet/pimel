@@ -13,7 +13,6 @@
     ];
   @endphp
 
-  {{-- Utilizzo del Componente Breadcrumb --}}
   @isset($breadcrumbs)
     <div class="container pt-3">
       <x-admin.breadcrumb :items="$breadcrumbs" />
@@ -27,12 +26,13 @@
   </x-slot>
 
   <div class="container py-4">
-    <div class="card shadow-sm">
+    <div class="card shadow-sm bg-primary-subtle">
       <div class="card-body p-4">
         <form
           action="{{ route('admin.rubrics.update', $rubric) }}"
           method="POST"
           class="needs-slug-generation"
+          data-slug-source-field="name"
         >
           @method('PUT')
           @include('admin.rubrics._form', ['rubric' => $rubric])

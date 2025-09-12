@@ -6,10 +6,7 @@
   @section('title', 'Servizi di Consulenza Pedagogica - PIMEL')
 
   <x-slot name="pageHeader">
-    <x-layout.page-header
-      title="Servizi di Consulenza"
-      bgClass="bg-body-public-default"
-    />
+    <x-layout.page-header title="Servizi di Consulenza" />
   </x-slot>
 
   <div class="container py-4 py-md-5">
@@ -21,60 +18,72 @@
         <h2 class="h4">Nessun servizio disponibile al momento.</h2>
       </div>
     @else
-      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 g-xl-5">
-        @foreach ($targetCategories as $category)
-          @if ($category->services->isNotEmpty())
-            <div class="col d-flex">
-              <section class="card shadow-sm w-100 flex-fill">
-                <div class="card-header text-center py-3 border-0">
-                  <div class="mb-2">
-                    @if ($category->icon_class)
-                      <span class="material-symbols-outlined fs-1 text-dark">
-                        {{ $category->icon_class }}
-                      </span>
-                    @else
-                      <span class="material-symbols-outlined fs-1 text-dark">
-                        category
-                      </span>
-                    @endif
-                  </div>
-                  <h2 class="h5 fw-semibold mb-0 text-dark">
-                    {{ $category->name }}
-                  </h2>
-                </div>
-                <div class="card-body d-flex flex-column">
-                  @if ($category->description)
-                    <p class="small text-muted mb-3">
-                      {{ $category->description }}
-                    </p>
-                  @endif
+      <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
+          <div
+            class="row row-cols-1 row-cols-md-2 g-4 g-xl-5 justify-content-center"
+          >
+            @foreach ($targetCategories as $category)
+              @if ($category->services->isNotEmpty())
+                <div class="col d-flex">
+                  <section class="card shadow-sm w-100 flex-fill">
+                    <div class="card-header text-center py-3 border-0">
+                      <div class="mb-2">
+                        @if ($category->icon_class)
+                          <span
+                            class="material-symbols-outlined fs-1 text-dark"
+                          >
+                            {{ $category->icon_class }}
+                          </span>
+                        @else
+                          <span
+                            class="material-symbols-outlined fs-1 text-dark"
+                          >
+                            category
+                          </span>
+                        @endif
+                      </div>
+                      <h2 class="h5 fw-semibold mb-0 text-dark">
+                        {{ $category->name }}
+                      </h2>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                      @if ($category->description)
+                        <p class="small text-muted mb-3">
+                          {{ $category->description }}
+                        </p>
+                      @endif
 
-                  <ul class="list-unstyled mb-0 mt-auto">
-                    @foreach ($category->services as $service)
-                      <li class="mb-2">
-                        <button
-                          type="button"
-                          class="btn btn-link p-0 text-start fw-medium text-body text-decoration-none focus-ring w-100 service-modal-trigger"
-                          data-bs-toggle="modal"
-                          data-bs-target="#serviceDetailModal"
-                          data-service-name="{{ $service->name }}"
-                          data-service-description="{{ $service->description }}"
-                          data-service-target-audience="{{ $service->target_audience }}"
-                          data-service-objectives="{{ $service->objectives }}"
-                          data-service-modalities="{{ $service->modalities }}"
-                          data-service-contact-url="{{ route('contatti.form', ['service_of_interest' => $service->name]) }}"
-                        >
-                          <i class="bi bi-check-circle text-primary me-2"></i>
-                          {{ $service->name }}
-                        </button>
-                      </li>
-                    @endforeach
-                  </ul>
+                      <ul class="list-unstyled mb-0 mt-auto">
+                        @foreach ($category->services as $service)
+                          <li class="mb-2">
+                            <button
+                              type="button"
+                              class="btn btn-link p-0 text-start fw-medium text-body text-decoration-none focus-ring w-100 service-modal-trigger"
+                              data-bs-toggle="modal"
+                              data-bs-target="#serviceDetailModal"
+                              data-service-name="{{ $service->name }}"
+                              data-service-description="{{ $service->description }}"
+                              data-service-target-audience="{{ $service->target_audience }}"
+                              data-service-objectives="{{ $service->objectives }}"
+                              data-service-modalities="{{ $service->modalities }}"
+                              data-service-contact-url="{{ route('contatti.form', ['service_of_interest' => $service->name]) }}"
+                            >
+                              <i
+                                class="bi bi-check-circle text-primary me-2"
+                              ></i>
+                              {{ $service->name }}
+                            </button>
+                          </li>
+                        @endforeach
+                      </ul>
+                    </div>
+                  </section>
                 </div>
-              </section>
-            </div>
-          @endif
-        @endforeach
+              @endif
+            @endforeach
+          </div>
+        </div>
       </div>
     @endif
   </div>
@@ -176,30 +185,4 @@
       </div>
     </div>
   </div>
-
-  {{-- Sezione CTA --}}
-  <x-slot name="afterMainFullWidthSection">
-    <div class="full-width-strip py-5">
-      <div class="container py-md-5">
-        <div class="row justify-content-center">
-          <div class="col-lg-8 text-center">
-            <h2 class="display-6 fw-semibold text-dark mb-3">
-              Non sai quale servizio fa per te?
-            </h2>
-            <p class="lead text-muted mb-4">
-              Ogni percorso è unico. Contattami per una chiacchierata
-              conoscitiva gratuita e senza impegno. Insieme troveremo la
-              soluzione più adatta alle tue esigenze.
-            </p>
-            <a
-              href="{{ route('contatti.form') }}"
-              class="btn btn-dark btn-lg focus-ring px-4"
-            >
-              Parliamone
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </x-slot>
 </x-app-layout>

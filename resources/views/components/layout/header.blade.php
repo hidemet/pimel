@@ -1,7 +1,5 @@
-
 <header class="sticky-top">
   <nav class="navbar navbar-expand-md py-3 px-5 bg-body shadow-sm">
-    {{-- 1. LOGO (a sinistra) --}}
     <a
       class="navbar-brand"
       href="{{ route('home') }}"
@@ -13,7 +11,6 @@
       />
     </a>
 
-    {{-- 2. TOGGLER (Bootstrap lo posiziona a destra automaticamente su mobile rispetto al brand) --}}
     <button
       class="navbar-toggler"
       type="button"
@@ -26,14 +23,11 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    {{-- 3. CONTENUTO COLLASSABILE --}}
     <div
       class="collapse navbar-collapse"
       id="navbarNavContent"
     >
-      {{-- Questa UL usa ms-auto per spingere TUTTO il suo contenuto (link, bottone, utente) a destra --}}
       <ul class="navbar-nav ms-auto align-items-center">
-        {{-- Voci di menu --}}
         <li class="nav-item mx-lg-1">
           <a
             class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}"
@@ -75,8 +69,6 @@
           </a>
         </li>
 
-        {{-- Pulsante Contattami --}}
-        {{-- mt-2 mt-md-0 per spaziatura su mobile, ms-md-2 per spazio da ultimo link su desktop --}}
         <li class="nav-item mx-lg-1 mt-2 mt-md-0 ms-md-2">
           <a
             href="{{ route('contatti.form') }}"
@@ -86,8 +78,6 @@
           </a>
         </li>
 
-        {{-- Icona/Dropdown Utente --}}
-        {{-- mt-2 mt-md-0 per spaziatura su mobile, ms-md-2 per spazio da Contattami su desktop --}}
         <li class="nav-item mt-2 mt-md-0 ms-md-2">
           @guest
             <a
@@ -120,7 +110,6 @@
                 class="dropdown-menu dropdown-menu-end shadow-sm mt-2"
                 aria-labelledby="userDropdown"
               >
-                {{-- Dropdown items --}}
                 <li class="px-3 py-2">
                   <div class="fw-bold">{{ Auth::user()->name }}</div>
                   <div class="small text-muted">{{ Auth::user()->email }}</div>

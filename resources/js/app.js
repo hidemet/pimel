@@ -1,11 +1,12 @@
-// resources/js/app.js (Versione Finale Refattorizzata)
-
 import './bootstrap';
 import $ from 'jquery';
-import { Tooltip, Toast } from 'bootstrap'; // Importa i componenti necessari
+import { Tooltip, Toast } from 'bootstrap';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/it';
+import Alpine from 'alpinejs';
+window.Alpine = Alpine;
+Alpine.start();
 
 // Definizioni globali
 window.$ = window.jQuery = $;
@@ -63,6 +64,7 @@ window.showToast = function (message, type = 'info', title = 'Notifica') {
   const bsToast = Toast.getOrCreateInstance(toastEl);
   bsToast.show();
 };
+
 
 // ESECUZIONE CODICE AL "DOM READY"
 $(function () {
@@ -149,5 +151,5 @@ $(function () {
     import('./pages/admin-comments-index.js');
   if ($('form.needs-slug-generation').length) import('./admin-forms.js');
   if ($('#serviceDetailModal').length) import('./pages/servizi-index.js');
-  if ($('#article-content').length) import('./pages/blog-show.js'); // Modificato per essere più specifico
+  if ($('#article-content').length) import('./pages/blog-show.js');
 });

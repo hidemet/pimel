@@ -1,14 +1,7 @@
-// resources/js/pages/blog-index.js
-
-// Non serve più $(function() { ... }) perché l'importazione
-// gestita da Vite assicura che il DOM sia pronto.
-
 const articleListContainer = $('#article-list-container');
 const paginationContainer = $('#pagination-container');
 
 function fetchArticles(url) {
-  // ... la tua funzione fetchArticles ...
-  // (assicurati di non avere <script> tag qui dentro)
   console.log('Richiesta AJAX a:', url);
 
   articleListContainer.css('opacity', 0.5);

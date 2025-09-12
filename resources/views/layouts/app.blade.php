@@ -21,20 +21,16 @@
     @stack('meta')
   </head>
 
-  <body>
+  <body class="d-flex flex-column h-100">
     <x-layout.header />
 
     @isset($pageHeader)
       {{ $pageHeader }}
     @endisset
 
-    <main class="flex-grow-1 w-100">
+    <main class= "flex-shrink-0 w-100">
       {{ $slot }}
     </main>
-
-    @isset($afterMainFullWidthSection)
-      {{ $afterMainFullWidthSection }}
-    @endisset
 
     <x-layout.footer />
 
@@ -48,9 +44,11 @@
       class="toast-container position-fixed bottom-0 end-0 p-3"
       style="z-index: 1080"
     >
-      @if (session('toast'))
-          data-session-toast='{{ json_encode(session('toast')) }}'
-      @endif
+      {{--
+        @if (session('toast'))
+        data-session-toast='{{ json_encode(session('toast')) }}'
+        @endif
+      --}}
 
       <div
         id="sessionToast"
@@ -74,10 +72,8 @@
       </div>
     </div>
 
-    {{-- 1. Carica prima lo script principale dell'applicazione (JS+CSS) --}}
     @vite(['resources/scss/custom.scss', 'resources/js/app.js'])
 
-    {{-- 2. Ora inserisci gli script specifici della pagina, che possono usare jQuery --}}
     @stack('page-scripts')
     @stack('meta')
   </body>

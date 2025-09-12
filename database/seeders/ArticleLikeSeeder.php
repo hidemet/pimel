@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Article;
 use App\Models\ArticleLike;
 use App\Models\User;
-use \Illuminate\Database\QueryException;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Seeder;
 
 class ArticleLikeSeeder extends Seeder
@@ -17,12 +17,13 @@ class ArticleLikeSeeder extends Seeder
 
         if ($articles->isEmpty() || $users->isEmpty()) {
             $this->command->warn('Nessun articolo pubblicato o utente trovato. Impossibile creare "mi piace".');
+
             return;
         }
 
         $likesToCreate = 300;
 
-        for ($i = 0; $i < $likesToCreate; $i++) {
+        for ($i = 0; $i < $likesToCreate; ++$i) {
             $article = $articles->random();
             $user = $users->random();
             $createdAt = fake()->dateTimeBetween(

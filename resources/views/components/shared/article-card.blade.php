@@ -5,7 +5,6 @@
 <div class="list-group-item py-4 px-3 bg-transparent">
   <article>
     <div class="row g-3 align-items-center">
-      {{-- COLONNA TESTO (Rubriche, Titolo, Description) --}}
       <div class="col flex-shrink-1">
         <header class="mb-2">
           {{-- RUBRICA --}}
@@ -70,7 +69,6 @@
 
       <div class="d-flex align-items-center flex-shrink-0 ms-auto">
         {{-- Codice per UTENTE AUTENTICATO --}}
-
         @auth
           <button
             type="button"

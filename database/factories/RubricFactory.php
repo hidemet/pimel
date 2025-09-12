@@ -13,7 +13,6 @@ class RubricFactory extends Factory
 
         return [
             'name' => $name,
-            'description' => fake()->optional()->sentence(10),
         ];
     }
 

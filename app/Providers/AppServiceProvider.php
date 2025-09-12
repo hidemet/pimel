@@ -2,18 +2,18 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use App\Observers\ArticleObserver;
 use App\Models\Article;
-use Illuminate\Pagination\Paginator; // Aggiungi questa riga
+use App\Observers\ArticleObserver;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\ServiceProvider; // Aggiungi questa riga
 
-
-class AppServiceProvider extends ServiceProvider {
+class AppServiceProvider extends ServiceProvider
+{
     /**
      * Register any application services.
      */
-    public function register(): void {
-        //
+    public function register(): void
+    {
     }
 
     /**
@@ -21,7 +21,6 @@ class AppServiceProvider extends ServiceProvider {
      */
     public function boot(): void
     {
-        Article::observe(ArticleObserver::class);
-        Paginator::useBootstrapFive(); // Usa useBootstrapFive() per Bootstrap 5
+        Paginator::useBootstrapFive(); 
     }
 }

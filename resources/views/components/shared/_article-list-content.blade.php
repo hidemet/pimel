@@ -8,7 +8,6 @@
     </div>
 @else
     <div class="text-center py-5 my-4 border rounded-3 bg-light">
-        <span class="material-symbols-outlined fs-1 text-muted">sentiment_dissatisfied</span>
         <p class="mt-3 mb-0">Nessun articolo trovato per i criteri selezionati.</p>
     </div>
 @endif

@@ -1,6 +1,8 @@
+{{-- resources/views/admin/services/create.blade.php --}}
 <x-app-layout>
   @section('title', 'Nuovo Servizio - Admin PIMEL')
 
+  {{-- Utilizzo del Componente Breadcrumb --}}
   @isset($breadcrumbs)
     <div class="container pt-3">
       <x-admin.breadcrumb :items="$breadcrumbs" />
@@ -14,13 +16,20 @@
   <div class="container py-4">
     <div class="card shadow-sm">
       <div class="card-body p-4">
-        {{-- Aggiungiamo la classe per attivare lo script dello slug --}}
+        {{-- Il form per la creazione del servizio --}}
         <form
           action="{{ route('admin.services.store') }}"
           method="POST"
           class="needs-slug-generation"
         >
-          @include('admin.services._form')
+          {{-- Include il form con tutte le variabili necessarie --}}
+          @include(
+            'admin.services._form',
+            [
+              'service' => $service,
+              'targetCategories' => $targetCategories,
+            ]
+          )
         </form>
       </div>
     </div>

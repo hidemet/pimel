@@ -7,33 +7,26 @@ use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\RedirectResponse;
 
-class VerifyEmailController extends Controller
-{
-    /**
-     * Mark the authenticated user's email address as verified.
-     */
-    public function __invoke(EmailVerificationRequest $request): RedirectResponse
-    {
+class VerifyEmailController extends Controller {
+    public function __invoke(EmailVerificationRequest $request): RedirectResponse {
+
         if ($request->user()->hasVerifiedEmail()) {
-            // VECCHIA
-            // return redirect()->intended(route('dashboard', absolute: false).'?verified=1');
-            // NUOVA
             if ($request->user()->isAdmin()) {
-                return redirect()->intended(route('admin.dashboard', absolute: false).'?verified=1');
+                return redirect()->intended(route('admin.dashboard', absolute: false) . '?verified=1');
             }
-            return redirect()->intended(route('profile.edit', absolute: false).'?verified=1');
+            return redirect()->intended(route('profile.edit', absolute: false) . '?verified=1');
         }
 
+        // Se l'utente sta verificando l'email ora, contrassegnala come verificata.
         if ($request->user()->markEmailAsVerified()) {
             event(new Verified($request->user()));
         }
 
-        // VECCHIA
-        // return redirect()->intended(route('dashboard', absolute: false).'?verified=1');
-        // NUOVA
+        // Dopo averla contrassegnata, reindirizzalo alla destinazione corretta.
         if ($request->user()->isAdmin()) {
-            return redirect()->intended(route('admin.dashboard', absolute: false).'?verified=1');
+            return redirect()->intended(route('admin.dashboard', absolute: false) . '?verified=1');
         }
-        return redirect()->intended(route('profile.edit', absolute: false).'?verified=1');
+
+        return redirect()->intended(route('profile.edit', absolute: false) . '?verified=1');
     }
 }

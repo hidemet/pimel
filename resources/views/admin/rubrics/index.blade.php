@@ -53,82 +53,16 @@
       </div>
     @endif
 
-    {{-- Riga Ricerca e Ordinamento Semplificata --}}
-    <div class="mb-4">
-      <form
-        id="filterSortForm"
-        action="{{ route('admin.rubrics.index') }}"
-        method="GET"
-        class="row g-2 align-items-center"
-      >
-        {{-- Campo di ricerca --}}
-        <div class="col-sm-8 col-md-9">
-          <label
-            for="search_term_main"
-            class="visually-hidden"
-          >
-            Cerca Rubriche
-          </label>
-          <div class="input-group">
-            <span class="input-group-text"><i class="bi bi-search"></i></span>
-            <input
-              type="text"
-              name="search"
-              id="search_term_main"
-              class="form-control"
-              placeholder="Cerca per nome o descrizione..."
-              value="{{ request('search') }}"
-            />
-          </div>
-        </div>
-
-        {{-- Pulsanti di ordinamento --}}
-        <div class="col-sm-4 col-md-3 d-flex justify-content-end">
-          <div
-            class="btn-group shadow-sm"
-            role="group"
-            aria-label="Ordina per nome"
-          >
-            <a
-              href="{{ route('admin.rubrics.index', array_merge(request()->query(), ['sort_direction' => 'asc'])) }}"
-              class="btn btn-outline-secondary {{ $currentSort === 'asc' ? 'active' : '' }}"
-              data-bs-toggle="tooltip"
-              title="Ordina A-Z"
-            >
-              <i class="bi bi-sort-alpha-down"></i>
-            </a>
-            <a
-              href="{{ route('admin.rubrics.index', array_merge(request()->query(), ['sort_direction' => 'desc'])) }}"
-              class="btn btn-outline-secondary {{ $currentSort === 'desc' ? 'active' : '' }}"
-              data-bs-toggle="tooltip"
-              title="Ordina Z-A"
-            >
-              <i class="bi bi-sort-alpha-up"></i>
-            </a>
-          </div>
-        </div>
-
-        {{-- Pulsante nascosto per l'invio del form tramite tasto "Invio" --}}
-        <button
-          type="submit"
-          class="visually-hidden"
-          aria-hidden="true"
-        >
-          Cerca
-        </button>
-      </form>
-    </div>
-
     {{-- Tabella Rubriche --}}
-    <div class="card shadow-sm">
+    <div class="card shadow-sm rounded-3">
       <div class="table-responsive">
         @if ($rubrics->isNotEmpty())
-          <table class="table table-hover align-middle mb-0">
-            <thead class="table-light">
+          <table
+            class="table table-hover align-middle mb-0 rounded-3 overflow-hidden"
+          >
+            <thead class="table-dark">
               <tr>
                 <th>Nome</th>
-                <th class="d-none d-md-table-cell">Descrizione</th>
-                <th class="text-center">Articoli</th>
                 <th class="text-end">Azioni</th>
               </tr>
             </thead>
@@ -136,35 +70,26 @@
               @foreach ($rubrics as $rubric)
                 <tr>
                   <td>
-                    <a
-                      href="{{ route('admin.rubrics.edit', $rubric) }}"
-                      class="text-dark fw-semibold text-decoration-none"
+                    <div
+                      class="d-flex justify-content-between align-items-center"
                     >
-                      {{ $rubric->name }}
-                    </a>
-                    <p class="small text-muted mb-0 d-none d-lg-block">
-                      <code>{{ $rubric->slug }}</code>
-                    </p>
-                  </td>
-                  <td class="d-none d-md-table-cell text-muted small">
-                    {{ Str::limit($rubric->description ?? 'Nessuna descrizione.', 100) }}
-                  </td>
-                  <td class="text-center">
-                    @if ($rubric->articles_count > 0)
-                      <a
-                        href="{{ route('admin.articles.index', ['rubric_id' => $rubric->id]) }}"
-                        class="btn btn-sm btn-light position-relative"
-                      >
-                        Articoli
-                        <span
-                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary"
+                      <div>
+                        <a
+                          href="{{ route('blog.index', ['rubrica' => $rubric->slug]) }}"
+                          class="text-dark fw-semibold text-decoration-none"
+                          title="Visualizza articoli di questa rubrica nel blog"
                         >
-                          {{ $rubric->articles_count }}
-                        </span>
-                      </a>
-                    @else
-                      <span class="text-muted">0</span>
-                    @endif
+                          {{ $rubric->name }}
+                        </a>
+                        <p class="small text-muted mb-0">
+                          <code>{{ $rubric->slug }}</code>
+                          @if ($rubric->articles_count > 0)
+                              • {{ $rubric->articles_count }}
+                              articol{{ $rubric->articles_count == 1 ? 'o' : 'i' }}
+                          @endif
+                        </p>
+                      </div>
+                    </div>
                   </td>
                   <td class="text-end">
                     <a

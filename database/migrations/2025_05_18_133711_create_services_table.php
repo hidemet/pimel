@@ -19,7 +19,6 @@ return new class extends Migration {
             $table->text('objectives')->nullable();
             $table->text('modalities')->nullable();
             $table->unsignedBigInteger('target_category_id')->nullable();
-            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

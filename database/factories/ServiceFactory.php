@@ -16,7 +16,6 @@ class ServiceFactory extends Factory
             'target_audience' => fake()->sentence(rand(8, 15)),
             'objectives' => $this->generateListItems(rand(3, 5)),
             'modalities' => $this->generateListItems(rand(2, 4)),
-            'is_active' => fake()->boolean(90),
             'target_category_id' => $this->getRandomTargetCategory(),
         ];
     }
@@ -31,8 +30,8 @@ class ServiceFactory extends Factory
     private function generateListItems(int $count): string
     {
         $items = [];
-        for ($i = 0; $i < $count; $i++) {
-            $items[] = '- ' . fake()->sentence(rand(5, 10));
+        for ($i = 0; $i < $count; ++$i) {
+            $items[] = '- '.fake()->sentence(rand(5, 10));
         }
 
         return implode("\n", $items);
@@ -40,13 +39,13 @@ class ServiceFactory extends Factory
 
     private function getRandomTargetCategory(): ?int
     {
-        if (TargetCategory::count() === 0) {
+        if (0 === TargetCategory::count()) {
             return null;
         }
 
         $shouldAssignCategory = fake()->boolean(80);
 
-        if (!$shouldAssignCategory) {
+        if (! $shouldAssignCategory) {
             return null;
         }
 

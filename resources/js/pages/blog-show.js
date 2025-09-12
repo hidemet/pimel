@@ -1,7 +1,5 @@
-// resources/js/pages/blog-show.js
-
 import $ from 'jquery';
-import { Collapse } from 'bootstrap'; // Importiamo Collapse per la gestione delle risposte
+import { Collapse } from 'bootstrap'; 
 
 $(function () {
   // --- Logica per il toggle delle icone nelle risposte (Refactoring in jQuery) ---

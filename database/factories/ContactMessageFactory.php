@@ -24,12 +24,11 @@ class ContactMessageFactory extends Factory
     {
         $shouldAssignService = fake()->boolean(60);
 
-        if (!$shouldAssignService) {
+        if (! $shouldAssignService) {
             return null;
         }
 
-        $activeService = Service::where('is_active', true)
-            ->inRandomOrder()
+        $activeService = Service::inRandomOrder()
             ->first();
 
         return $activeService?->name;

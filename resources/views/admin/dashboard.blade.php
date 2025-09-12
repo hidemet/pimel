@@ -9,10 +9,7 @@
   @endisset
 
   <x-slot name="pageHeader">
-    <x-layout.page-header
-      title="Pannello Amministrazione"
-      subtitle="Gestisci i contenuti e le funzionalità del sito."
-    />
+    <x-layout.page-header title="Pannello Amministrazione" />
   </x-slot>
 
   <div class="container py-4 py-md-5">
@@ -40,9 +37,6 @@
                 article
               </span>
               <h5 class="card-title fw-semibold">Gestisci Articoli</h5>
-              <p class="card-text small text-muted">
-                Crea, modifica ed elimina gli articoli del blog.
-              </p>
             </div>
             {{-- Non serve più un link "Vai a..." dato che tutta la card è cliccabile. --}}
           </div>
@@ -63,9 +57,6 @@
                 category
               </span>
               <h5 class="card-title fw-semibold">Gestisci Rubriche</h5>
-              <p class="card-text small text-muted">
-                Organizza le categorie tematiche del blog.
-              </p>
             </div>
           </div>
         </a>
@@ -85,9 +76,6 @@
                 comment
               </span>
               <h5 class="card-title fw-semibold">Modera Commenti</h5>
-              <p class="card-text small text-muted">
-                Approva o elimina i commenti degli utenti.
-              </p>
             </div>
           </div>
         </a>
@@ -107,9 +95,6 @@
                 design_services
               </span>
               <h5 class="card-title fw-semibold">Gestisci Servizi</h5>
-              <p class="card-text small text-muted">
-                Aggiungi o modifica i servizi di consulenza offerti.
-              </p>
             </div>
           </div>
         </a>
@@ -128,9 +113,6 @@
                 mark_email_unread
               </span>
               <h5 class="card-title fw-semibold">Gestisci Newsletter</h5>
-              <p class="card-text small text-muted">
-                Visualizza e gestisci gli iscritti alla newsletter.
-              </p>
             </div>
           </div>
         </a>
@@ -150,31 +132,6 @@
                 forward_to_inbox
               </span>
               <h5 class="card-title fw-semibold">Visualizza Messaggi</h5>
-              <p class="card-text small text-muted">
-                Leggi i messaggi dal form di contatto.
-              </p>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      {{-- Card Il Mio Profilo (per l'Admin) --}}
-      <div class="col-md-6 col-lg-4">
-        <a
-          href="{{ route('profile.edit') }}"
-          class="card h-100 shadow-sm text-decoration-none text-dark"
-        >
-          <div
-            class="card-body text-center d-flex flex-column justify-content-between"
-          >
-            <div class="mb-3">
-              <span class="material-symbols-outlined fs-1 text-dark mb-2">
-                manage_accounts
-              </span>
-              <h5 class="card-title fw-semibold">Il Mio Profilo</h5>
-              <p class="card-text small text-muted">
-                Modifica i tuoi dati personali e la password.
-              </p>
             </div>
           </div>
         </a>

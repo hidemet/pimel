@@ -1,4 +1,3 @@
-{{-- resources/views/components/shared/newsletter-card.blade.php --}}
 <div class="card h-100 rounded-4 p-2 bg-transparent">
     <div class="card-body text-center">
         <h5 class="card-title mb-3">

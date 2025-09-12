@@ -30,28 +30,28 @@
 
     {{-- Filtri per Stato --}}
     <div class="nav nav-pills-segmented mb-4">
-      @foreach ($commentStatuses as $statusKey => $statusData)
-        <a
-          href="{{ route('admin.comments.index', ['status' => $statusKey]) }}"
-          class="nav-link {{ $currentStatusFilter == $statusKey ? 'active' : '' }} d-flex align-items-center gap-1"
-        >
-          <span>{{ $statusData['text'] }}</span>
-          <span
-            id="badge-{{ $statusKey }}"
-            class="badge rounded-pill {{ $currentStatusFilter == $statusKey ? 'bg-white text-primary' : 'bg-secondary bg-opacity-25' }} ms-1"
-          >
-            {{ $statusData['count'] }}
-          </span>
-        </a>
-      @endforeach
+      <a
+        href="{{ route('admin.comments.index', ['status' => 'pending']) }}"
+        class="nav-link {{ $currentStatusFilter == 'pending' ? 'active' : '' }}"
+      >
+        In Attesa
+      </a>
+      <a
+        href="{{ route('admin.comments.index', ['status' => 'approved']) }}"
+        class="nav-link {{ $currentStatusFilter == 'approved' ? 'active' : '' }}"
+      >
+        Approvati
+      </a>
     </div>
 
     {{-- Tabella Commenti --}}
-    <div class="card shadow-sm">
+    <div class="card shadow-sm rounded-3">
       <div class="table-responsive">
         @if ($comments->isNotEmpty())
-          <table class="table table-hover align-middle mb-0">
-            <thead class="table-light">
+          <table
+            class="table table-hover align-middle mb-0 rounded-3 overflow-hidden"
+          >
+            <thead class="table-dark">
               <tr>
                 <th style="width: 45%">Commento</th>
                 <th style="width: 25%">Autore / Articolo</th>
@@ -150,7 +150,7 @@
             <i class="bi bi-chat-square-dots fs-1"></i>
             <p class="mt-3 mb-0">
               Nessun commento trovato per lo stato
-              "{{ $commentStatuses[$currentStatusFilter]['text'] }}".
+              "{{ $currentStatusFilter == 'pending' ? 'In Attesa' : 'Approvati' }}".
             </p>
           </div>
         @endif

@@ -1,6 +1,4 @@
-// resources/js/pages/servizi-index.js
-
-// Il wrapper document ready di jQuery è necessario
+// usato per popolare il modale dei servizi
 $(function () {
   const $serviceDetailModal = $('#serviceDetailModal');
   if (!$serviceDetailModal.length) return;

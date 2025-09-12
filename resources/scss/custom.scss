@@ -3,10 +3,10 @@
 // -----------------------------------------------------------------------------
 // 0. IMPORT FONTS & ICON SETS
 // -----------------------------------------------------------------------------
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200");
-@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
-@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css");
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+@import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
 
 // -----------------------------------------------------------------------------
 // 1. YOUR CUSTOM VARIABLE DEFINITIONS (BEFORE BOOTSTRAP VARS)
@@ -57,29 +57,29 @@ $hero-section-bg: #00529d;
 
 // Font Stacks
 $font-family-sans-serif-custom:
-    "Inter",
-    system-ui,
-    -apple-system,
-    "Segoe UI",
-    Roboto,
-    "Helvetica Neue",
-    "Noto Sans",
-    "Liberation Sans",
-    Arial,
-    sans-serif,
-    "Apple Color Emoji",
-    "Segoe UI Emoji",
-    "Segoe UI Symbol",
-    "Noto Color Emoji";
+  'Inter',
+  system-ui,
+  -apple-system,
+  'Segoe UI',
+  Roboto,
+  'Helvetica Neue',
+  'Noto Sans',
+  'Liberation Sans',
+  Arial,
+  sans-serif,
+  'Apple Color Emoji',
+  'Segoe UI Emoji',
+  'Segoe UI Symbol',
+  'Noto Color Emoji';
 $font-family-serif-custom:
-    "Lora", Georgia, Cambria, "Times New Roman", Times, serif;
+  'Lora', Georgia, Cambria, 'Times New Roman', Times, serif;
 
 // -----------------------------------------------------------------------------
 // 2. IMPORT BOOTSTRAP FUNCTIONS & VARIABLES
 //    This makes Bootstrap's SASS functions and default variables available.
 // -----------------------------------------------------------------------------
-@import "bootstrap/scss/functions";
-@import "bootstrap/scss/variables"; // Bootstrap's default $primary, $secondary, $theme-colors, etc. are now set.
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables'; // Bootstrap's default $primary, $secondary, $theme-colors, etc. are now set.
 
 // -----------------------------------------------------------------------------
 // 3. OVERRIDE BOOTSTRAP VARIABLES WITH YOUR CUSTOM VALUES
@@ -129,22 +129,22 @@ $navbar-light-color: $custom-navbar-color;
 //    Do this *after* Step 3 where you've set $primary, $secondary etc.
 // -----------------------------------------------------------------------------
 $theme-colors: map-merge(
-    $theme-colors,
-    (
-        "tertiary": $custom-tertiary,
-        // Add your custom tertiary
-        "ctc": $custom-ctc,
-        // Add your custom ctc color
-        "primary": $custom-primary,
-        // Already updated by $primary = $custom-primary above
-        "secondary": $custom-secondary,
-        // Already updated by $secondary = $custom-secondary above
-        "warning": $custom-warning,
+  $theme-colors,
+  (
+    'tertiary': $custom-tertiary,
+    // Add your custom tertiary
+    'ctc': $custom-ctc,
+    // Add your custom ctc color
+    'primary': $custom-primary,
+    // Already updated by $primary = $custom-primary above
+    'secondary': $custom-secondary,
+    // Already updated by $secondary = $custom-secondary above
+    'warning': $custom-warning,
 
-        // Already updated by $warning = $custom-warning above
-        // "secondary": $secondary, // Already updated
-         // "warning": $warning // Already updated
-    )
+    // Already updated by $warning = $custom-warning above
+    // "secondary": $secondary, // Already updated
+     // "warning": $warning // Already updated
+  )
 );
 
 // -----------------------------------------------------------------------------
@@ -153,84 +153,79 @@ $theme-colors: map-merge(
 // -----------------------------------------------------------------------------
 
 // OR, if you prefer the single import (less control but simpler):
-@import "bootstrap/scss/bootstrap"; // Ensure steps 1-4 are before this.
+@import 'bootstrap/scss/bootstrap'; // Ensure steps 1-4 are before this.
 
 // -----------------------------------------------------------------------------
 // 6. YOUR CUSTOM STYLES (APPLIED AFTER BOOTSTRAP)
 // -----------------------------------------------------------------------------
 
 .bg-herosection {
-    background-color: $hero-section-bg;
+  background-color: $hero-section-bg;
 }
 
 .is-invalid-border {
-    border-color: var(--bs-danger) !important; // Rende il bordo rosso
-    box-shadow: 0 0 0 0.25rem rgba(var(--bs-danger-rgb), 0.25) !important; // Aggiunge un'ombra rossa
+  border-color: var(--bs-danger) !important; // Rende il bordo rosso
+  box-shadow: 0 0 0 0.25rem rgba(var(--bs-danger-rgb), 0.25) !important; // Aggiunge un'ombra rossa
 }
 
 .nav-pills-segmented {
-    display: inline-flex; // Modificato per non occupare tutta la larghezza di default
-    // display: flex; // Se vuoi che occupi tutta la larghezza disponibile e i bottoni si espandano
-    flex-wrap: wrap;
-    border: 1px solid var(--bs-border-color);
-    border-radius: var(--bs-border-radius-lg); // Bordo più arrotondato
-    overflow: hidden;
-    margin-bottom: 1.5rem; // Spazio sotto
+  display: inline-flex; // Modificato per non occupare tutta la larghezza di default
+  // display: flex; // Se vuoi che occupi tutta la larghezza disponibile e i bottoni si espandano
+  flex-wrap: wrap;
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius-lg); // Bordo più arrotondato
+  overflow: hidden;
+  margin-bottom: 1.5rem; // Spazio sotto
 
-    .nav-link {
-        // flex-grow: 1; // Rimuovi se non vuoi che si espandano per riempire lo spazio
-        text-align: center;
-        border-radius: 0;
-        border-right: 1px solid var(--bs-border-color);
-        color: var(--bs-body-color);
-        padding: 0.5rem 1rem; // Aggiustato padding
-        font-size: 0.875rem;
-        transition:
-            background-color 0.15s ease-in-out,
-            color 0.15s ease-in-out;
+  .nav-link {
+    // flex-grow: 1; // Rimuovi se non vuoi che si espandano per riempire lo spazio
+    text-align: center;
+    border-radius: 0;
+    border-right: 1px solid var(--bs-border-color);
+    color: var(--bs-body-color);
+    padding: 0.5rem 1rem; // Aggiustato padding
+    font-size: 0.875rem;
+    transition:
+      background-color 0.15s ease-in-out,
+      color 0.15s ease-in-out;
 
-        &:last-child {
-            border-right: 0;
-        }
-
-        &.active {
-            background-color: var(
-                --bs-primary
-            ); // Colore primario per lo sfondo attivo
-            color: var(--bs-light); // Testo chiaro per contrasto
-            font-weight: 500;
-            .badge {
-                // Badge dentro il link attivo
-                background-color: var(--bs-light) !important;
-                color: var(--bs-primary) !important;
-            }
-        }
-
-        &:not(.active):hover {
-            background-color: var(--bs-tertiary-bg);
-        }
-
-        .material-symbols-outlined {
-            font-size: 1.1em; // Leggermente più grande dell'fs-6
-            vertical-align: text-bottom;
-        }
-
-        .badge {
-            font-size: 0.8em;
-            padding: 0.25em 0.6em;
-            line-height: 1;
-        }
+    &:last-child {
+      border-right: 0;
     }
-}
 
-.full-width-strip {
-    background-color: $bg-form-color; // Usa la variabile SCSS
-    width: 100%; // Assicura la larghezza piena
+    &.active {
+      background-color: var(
+        --bs-primary
+      ); // Colore primario per lo sfondo attivo
+      color: var(--bs-light); // Testo chiaro per contrasto
+      font-weight: 500;
+      .badge {
+        // Badge dentro il link attivo
+        background-color: var(--bs-light) !important;
+        color: var(--bs-primary) !important;
+      }
+    }
+
+    &:not(.active):hover {
+      background-color: var(--bs-tertiary-bg);
+    }
+
+    .material-symbols-outlined {
+      font-size: 1.1em; // Leggermente più grande dell'fs-6
+      vertical-align: text-bottom;
+    }
+
+    .badge {
+      font-size: 0.8em;
+      padding: 0.25em 0.6em;
+      line-height: 1;
+    }
+  }
 }
 
 // **NUOVA CLASSE PER SFONDO SEZIONI FORM**
 .bg-form-section {
-    background-color: $bg-form-color !important; // Usiamo !important per assicurarci che sovrascriva altre utility se necessario
+  background-color: $bg-form-color !important; // Usiamo !important per assicurarci che sovrascriva altre utility se necessario
 }
 
 // **NUOVE CLASSI PER GLI SFONDI**
@@ -266,94 +261,94 @@ $theme-colors: map-merge(
 // }
 
 .signature-img {
-    max-width: 250px; 
-    height: auto;
-    margin-top: 1rem;
+  max-width: 250px;
+  height: auto;
+  margin-top: 1rem;
 }
 
 .article-author-img {
-    width: 48px; // Definisci la dimensione qui invece che inline
-    height: 48px;
-    object-fit: cover;
+  width: 48px; // Definisci la dimensione qui invece che inline
+  height: 48px;
+  object-fit: cover;
 }
 
 .article-author-icon {
-    font-size: 48px; // Definisci la dimensione qui invece che inline
-    line-height: 1; // Per un corretto allineamento verticale se necessario
+  font-size: 48px; // Definisci la dimensione qui invece che inline
+  line-height: 1; // Per un corretto allineamento verticale se necessario
 }
 
 // Le classi per l'indentazione del testo rimangono utili:
 .ps-comment-body {
-    padding-left: calc(2.5rem + 1rem);
-    @include media-breakpoint-down(sm) {
-        padding-left: calc(2.5rem + 0.5rem);
-    }
+  padding-left: calc(2.5rem + 1rem);
+  @include media-breakpoint-down(sm) {
+    padding-left: calc(2.5rem + 0.5rem);
+  }
 }
 
 .ps-replies-indent {
-    padding-left: 1rem;
-    @include media-breakpoint-down(sm) {
-        padding-left: 0.75rem;
-    }
+  padding-left: 1rem;
+  @include media-breakpoint-down(sm) {
+    padding-left: 0.75rem;
+  }
 }
 
 .ps-reply-body {
-    padding-left: calc(2rem + 0.5rem);
-    @include media-breakpoint-down(sm) {
-        padding-left: calc(2rem + 0.25rem);
-    }
+  padding-left: calc(2rem + 0.5rem);
+  @include media-breakpoint-down(sm) {
+    padding-left: calc(2rem + 0.25rem);
+  }
 }
 
 // Padding per il corpo del commento principale, allineato con il testo sotto l'icona
 .ps-comment-body {
-    // L'icona principale è fs-1 (circa 2.25rem-2.5rem) + me-3 (1rem)
-    // Vogliamo un padding sinistro che sia circa questa larghezza
-    // Regola questo valore se necessario dopo aver testato visivamente
-    padding-left: calc(2.5rem + 1rem); // Basato su fs-1 e me-3
+  // L'icona principale è fs-1 (circa 2.25rem-2.5rem) + me-3 (1rem)
+  // Vogliamo un padding sinistro che sia circa questa larghezza
+  // Regola questo valore se necessario dopo aver testato visivamente
+  padding-left: calc(2.5rem + 1rem); // Basato su fs-1 e me-3
 
-    @include media-breakpoint-down(sm) {
-        // Su schermi piccoli, riduciamo un po'
-        padding-left: calc(2.5rem + 0.5rem);
-    }
+  @include media-breakpoint-down(sm) {
+    // Su schermi piccoli, riduciamo un po'
+    padding-left: calc(2.5rem + 0.5rem);
+  }
 }
 
 // Indentazione per il contenitore delle risposte
 .ps-replies-indent {
-    // Questo padding aggiunge un'ulteriore indentazione per le risposte
-    padding-left: 1rem; // O altro valore desiderato per l'indentazione delle risposte
+  // Questo padding aggiunge un'ulteriore indentazione per le risposte
+  padding-left: 1rem; // O altro valore desiderato per l'indentazione delle risposte
 
-    @include media-breakpoint-down(sm) {
-        padding-left: 0.75rem;
-    }
+  @include media-breakpoint-down(sm) {
+    padding-left: 0.75rem;
+  }
 }
 
 // Padding per il corpo della singola risposta, allineato con il testo sotto l'icona della risposta
 .ps-reply-body {
-    // L'icona della risposta è fs-2 (circa 1.75rem-2rem) + me-2 (0.5rem)
-    padding-left: calc(2rem + 0.5rem);
+  // L'icona della risposta è fs-2 (circa 1.75rem-2rem) + me-2 (0.5rem)
+  padding-left: calc(2rem + 0.5rem);
 
-    @include media-breakpoint-down(sm) {
-        padding-left: calc(2rem + 0.25rem);
-    }
+  @include media-breakpoint-down(sm) {
+    padding-left: calc(2rem + 0.25rem);
+  }
 }
 
 .nav-underline {
-    .nav-link {
-        &:not(.active) {
-            color: $gray-800; // Usa la variabile definita nello Step 3
-        }
+  .nav-link {
+    &:not(.active) {
+      color: $gray-800; // Usa la variabile definita nello Step 3
     }
+  }
 }
 
 // Component-specific styles
 .footer-custom-background {
-    background-color: $footer-custom-bg-color !important;
+  background-color: $footer-custom-bg-color !important;
 }
 
 .btn-ctc {
-    // Text color is generated by Bootstrap based on background.
-    // If you need to force it:
-    color: $custom-ctc-text-color !important;
+  // Text color is generated by Bootstrap based on background.
+  // If you need to force it:
+  color: $custom-ctc-text-color !important;
 }
 
 // .navbar-nav .nav-link.active {
@@ -373,14 +368,14 @@ $theme-colors: map-merge(
 // }
 // Backgrounds for specific sections/pages
 .bg-header-blog {
-    background-color: white;
-    margin-bottom: 3rem !important;
+  background-color: white;
+  margin-bottom: 3rem !important;
 } // Example
 .bg-content-blog {
-    background-color: #e6ebf0;
+  background-color: #e6ebf0;
 } // Example, or use $surface-blog
 .bg-newsletter-page-form-area {
-    background-color: #e6ebf0;
+  background-color: #e6ebf0;
 } // Example for the form wrapper class you might add
 // .bg-default is already handled by $body-bg potentially
 
@@ -409,30 +404,30 @@ $theme-colors: map-merge(
 //    This is for Bootstrap's CSS Custom Properties.
 // -----------------------------------------------------------------------------
 :root,
-[data-bs-theme="light"] {
-    --bs-primary: #{$primary}; // Use the SASS variable $primary (which is now your custom color)
-    --bs-primary-rgb: #{to-rgb($primary)};
-    --bs-secondary: #{$secondary};
-    --bs-secondary-rgb: #{to-rgb($secondary)};
-    --bs-warning: #{$warning};
-    --bs-warning-rgb: #{to-rgb($warning)};
-    // --bs-tertiary: #{$custom-tertiary}; // If you want to expose it as a CSS var
-    // --bs-tertiary-rgb: #{to-rgb($custom-tertiary)};
-    --bs-ctc: #{$custom-ctc};
-    --bs-ctc-rgb: #{to-rgb($custom-ctc)};
+[data-bs-theme='light'] {
+  --bs-primary: #{$primary}; // Use the SASS variable $primary (which is now your custom color)
+  --bs-primary-rgb: #{to-rgb($primary)};
+  --bs-secondary: #{$secondary};
+  --bs-secondary-rgb: #{to-rgb($secondary)};
+  --bs-warning: #{$warning};
+  --bs-warning-rgb: #{to-rgb($warning)};
+  // --bs-tertiary: #{$custom-tertiary}; // If you want to expose it as a CSS var
+  // --bs-tertiary-rgb: #{to-rgb($custom-tertiary)};
+  --bs-ctc: #{$custom-ctc};
+  --bs-ctc-rgb: #{to-rgb($custom-ctc)};
 
-    --bs-body-color: #{$body-color};
-    --bs-body-color-rgb: #{to-rgb($body-color)};
-    --bs-body-bg: #{$body-bg}; // Questo sarà #F5F7FA
-    --bs-body-bg-rgb: #{to-rgb($body-bg)};
+  --bs-body-color: #{$body-color};
+  --bs-body-color-rgb: #{to-rgb($body-color)};
+  --bs-body-bg: #{$body-bg}; // Questo sarà #F5F7FA
+  --bs-body-bg-rgb: #{to-rgb($body-bg)};
 
-    --bs-link-color: #{$custom-primary};
-    --bs-link-color-rgb: #{to-rgb($custom-primary)};
-    --bs-link-hover-color: #{darken($custom-primary, 10%)};
-    --bs-link-hover-color-rgb: #{to-rgb(darken($custom-primary, 10%))};
+  --bs-link-color: #{$custom-primary};
+  --bs-link-color-rgb: #{to-rgb($custom-primary)};
+  --bs-link-hover-color: #{darken($custom-primary, 10%)};
+  --bs-link-hover-color-rgb: #{to-rgb(darken($custom-primary, 10%))};
 
-    // Form switch specific variables (ensure $primary is your custom color)
-    --bs-form-switch-checked-bg: #{$primary};
-    --bs-form-switch-checked-border-color: #{$primary};
-    // ... etc. for pagination, nav-pills as in your original file, using the SASS variables
+  // Form switch specific variables (ensure $primary is your custom color)
+  --bs-form-switch-checked-bg: #{$primary};
+  --bs-form-switch-checked-border-color: #{$primary};
+  // ... etc. for pagination, nav-pills as in your original file, using the SASS variables
 }

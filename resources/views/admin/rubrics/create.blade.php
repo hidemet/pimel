@@ -17,14 +17,15 @@
   </x-slot>
 
   <div class="container py-4">
-    <div class="card shadow-sm">
+    <div class="card shadow-sm bg-primary-subtle">
       <div class="card-body p-4">
         <form
           action="{{ route('admin.rubrics.store') }}"
           method="POST"
           class="needs-slug-generation"
+          data-slug-source-field="name"
         >
-          @include('admin.rubrics._form', ['rubric' => new Rubric()])
+          @include('admin.rubrics._form', ['rubric' => $rubric])
         </form>
       </div>
     </div>
